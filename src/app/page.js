@@ -7,7 +7,7 @@ export default function Home() {
       <nav className="bg-white shadow-md sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <img src="images/roadguardian.jpg" alt="RoadGuardian Logo" className="h-12 w-12 rounded-lg"/>
+            <img src="images/roadguardianlogo.jpg" alt="RoadGuardian Logo" className="h-12 w-12 rounded-lg"/>
             <h1 className="text-2xl font-bold text-blue-600">RoadGuardian</h1>
           </div>
         </div>
