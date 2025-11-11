@@ -14,7 +14,7 @@ export default function Home() {
           priority
         />
         <div className={styles.intro}>
-          <h1>RoadGuardian - Done by Matas.</h1>
+          <h1>RoadGuardian - Done by Matas, Ethan, and Polski.</h1>
           <p>
             Looking for a starting point or more instructions? Head over to{" "}
             <a
