@@ -50,6 +50,14 @@ export default function HomePage() {
                 <section className="p-4 space-y-3">
                   <h3 className="text-lg font-semibold">Recent Activity</h3>
 
+                  <ul className="space-y-2">
+                    <ActivityItem
+                      icon="✅"
+                        text="Maintenence check completed"
+                          time="2 hours ago"
+                    />
+                            
+
 
                       
             
