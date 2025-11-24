@@ -77,17 +77,8 @@ export default function HomePage() {
                 <NavItem label="Location" icon="📍" />
                 <NavItem label="Maintenence" icon="🛠️" />
                 <NavItem label="Profile" icon="👤" />
+                            </nav>
                             
-
-
-                      
-            
-
-
-
-
-
-          
     </main>
   );
 }
