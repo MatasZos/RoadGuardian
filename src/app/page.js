@@ -34,6 +34,12 @@ export default function HomePage() {
                     color="red"
                 />
 
+                <ActionCard 
+                      title="Share Location"
+                        subtitle="let others know where you are"
+                          color="blue"
+                />
+
                       
             
 
