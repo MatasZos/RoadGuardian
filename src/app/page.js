@@ -62,6 +62,14 @@ export default function HomePage() {
                         text="Location shared with group"
                           time="1 day ago"
                     />
+
+                    <ActivityItem
+                      icon="🛠️"
+                        text="Oil change reminder"
+                          time="3 days ago"
+                    />
+                            </ul>
+                            </section>
                             
 
 
