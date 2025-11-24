@@ -47,7 +47,8 @@ export default function HomePage() {
                 />
                             </div>
 
-                <section className="p-4
+                <section className="p-4 space-y-3">
+                  <h3 className="text-lg font-semibold">Recent Activity</h3>
 
 
                       
