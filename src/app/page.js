@@ -56,6 +56,12 @@ export default function HomePage() {
                         text="Maintenence check completed"
                           time="2 hours ago"
                     />
+
+                    <ActivityItem
+                      icon="📍"
+                        text="Location shared with group"
+                          time="1 day ago"
+                    />
                             
 
 
