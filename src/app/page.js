@@ -40,6 +40,16 @@ export default function HomePage() {
                           color="blue"
                 />
 
+                <ActionCard
+                      title="Bike Maintenance"
+                        subtitle="Keepy your ride in perfect condition"
+                          color="green"
+                />
+                            </div>
+
+                <section className="p-4
+
+
                       
             
 
