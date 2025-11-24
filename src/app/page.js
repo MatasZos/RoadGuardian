@@ -18,6 +18,17 @@ export default function HomePage() {
         height={500}
         alt="RoadGuardian Logo"
       />
+          <h2 className="text-2xl font-bold">Because Every Rider Needs A Guardian</h2>
+          <p className="text-gray-500 text-sm">
+            Emergency assistance and maintenance tracking for every journey
+          </p>
+          </div>
+
+
+
+
+
+          
     </main>
   );
 }
