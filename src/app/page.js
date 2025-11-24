@@ -32,7 +32,7 @@ export default function HomePage() {
                 title="Emergency Alert"
                   subtitle="Instant help when you need it"
                     color="red"
-                      />
+                />
 
                       
             
