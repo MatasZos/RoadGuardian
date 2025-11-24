@@ -25,6 +25,16 @@ export default function HomePage() {
           </div>
 
           <section className="p-4 space-y-3">
+            <h3 className="text-lg font-semibold">Quick Actions</h3>
+
+            <div className="space-y-3">
+              <ActionCard
+                title="Emergency Alert"
+                  subtitle="Instant help when you need it"
+                    color="red"
+                      />
+
+                      
             
 
 
