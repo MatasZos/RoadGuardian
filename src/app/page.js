@@ -8,7 +8,7 @@ export default function HomePage() {
         <Link href="/login">Login here.</Link>
       </p>
     <Image
-      src="/images/"
+      src="/images/roadguardianlogo.jpg"
       width={500}
       height={500}
       alt="Picture of the author"
