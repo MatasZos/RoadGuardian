@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+
 export default function HomePage() {
   return (
     <main>
@@ -7,12 +8,12 @@ export default function HomePage() {
       <p>
         <Link href="/login">Login here.</Link>
       </p>
-    <Image
-      src="/images/roadguardianlogo.jpg"
-      width={500}
-      height={500}
-      alt="RoadGuardian Logo"
-    />
+      <Image
+        src="/images/roadguardianlogo.jpg"
+        width={500}
+        height={500}
+        alt="RoadGuardian Logo"
+      />
     </main>
   );
 }
