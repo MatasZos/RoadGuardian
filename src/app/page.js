@@ -73,6 +73,7 @@ export default function HomePage() {
 
               <nav className="mt-auto border-t flex justify-around py-3 bg-white">
                 <NavItem label="Home" icon="🏠" active />
+                <NavItem label="Emergency" icon="🚨" />
                             
 
 
