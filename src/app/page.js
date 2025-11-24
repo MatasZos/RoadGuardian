@@ -11,7 +11,7 @@ export default function HomePage() {
       src="/images/roadguardianlogo.jpg"
       width={500}
       height={500}
-      alt="Picture of the author"
+      alt="RoadGuardian Logo"
     />
     </main>
   );
