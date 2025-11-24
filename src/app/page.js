@@ -70,6 +70,8 @@ export default function HomePage() {
                     />
                             </ul>
                             </section>
+
+              <nav className="mt-auto border-t flex justify-around py-3 bg-white">
                             
 
 
