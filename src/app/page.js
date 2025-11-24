@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 export default function HomePage() {
   return (
     <main>
@@ -6,6 +7,12 @@ export default function HomePage() {
       <p>
         <Link href="/login">Login here.</Link>
       </p>
+    <Image
+      src="/images/"
+      width={500}
+      height={500}
+      alt="Picture of the author"
+    />
     </main>
   );
 }
