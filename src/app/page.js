@@ -75,6 +75,7 @@ export default function HomePage() {
                 <NavItem label="Home" icon="🏠" active />
                 <NavItem label="Emergency" icon="🚨" />
                 <NavItem label="Location" icon="📍" />
+                <NavItem label="Maintenence" icon="🛠️" />
                             
 
 
