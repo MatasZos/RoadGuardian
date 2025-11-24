@@ -7,6 +7,8 @@ export default function HomePage() {
       <h1 "font-semibold">RoadGuardian</h1>
       <button aria-label="Notifications">
         <span>src="/images/notification-bell.svg"</span>
+    </button>
+    
       <p>
         <Link href="/login">Login here.</Link>
       </p>
