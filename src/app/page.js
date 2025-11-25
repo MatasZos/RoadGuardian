@@ -45,9 +45,21 @@ export default function HomePage() {
         />
       </button>
 
-      <p className="mb-4">
-        <Link href="/login" className="text-blue-600 underline">
+      <p>
+        <Link href="/login">
           Login here.
+        </Link>
+      </p>
+
+            <p>
+        <Link href="/maintenance">
+          View your personal maintenance history here.
+        </Link>
+      </p>
+
+            <p>
+        <Link href="/breakdown">
+          Request help here.
         </Link>
       </p>
 
