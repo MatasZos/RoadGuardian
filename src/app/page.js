@@ -4,16 +4,13 @@ import {
   AppBar,
   Toolbar,
   IconButton,
-  Typography,
   Box,
   Avatar,
   Button,
   Stack,
-  Paper,
 } from "@mui/material";
 
 import MenuIcon from "@mui/icons-material/Menu";
-import StarIcon from "@mui/icons-material/Star";
 
 export default function HomePage() {
   return (
@@ -27,7 +24,6 @@ export default function HomePage() {
     >
       <AppBar position="static" elevation={0} sx={{ bgcolor: "black" }}>
         <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-    
           <IconButton size="large" edge="start" color="inherit">
             <MenuIcon />
           </IconButton>
@@ -40,7 +36,8 @@ export default function HomePage() {
             }}
           />
         </Toolbar>
-      </AppBar
+      </AppBar>
+
       <Box
         sx={{
           display: "flex",
