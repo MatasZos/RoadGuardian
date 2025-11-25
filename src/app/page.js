@@ -25,15 +25,13 @@ export default function HomePage() {
         flexDirection: "column",
       }}
     >
-      {/* TOP BAR */}
       <AppBar position="static" elevation={0} sx={{ bgcolor: "black" }}>
         <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-          {/* Left: Menu */}
+    
           <IconButton size="large" edge="start" color="inherit">
             <MenuIcon />
           </IconButton>
 
-          {/* Right: Avatar */}
           <Avatar
             sx={{
               bgcolor: "transparent",
@@ -42,9 +40,7 @@ export default function HomePage() {
             }}
           />
         </Toolbar>
-      </AppBar>
-
-      {/* MAIN CONTENT */}
+      </AppBar
       <Box
         sx={{
           display: "flex",
@@ -55,7 +51,6 @@ export default function HomePage() {
           justifyContent: "center",
         }}
       >
-        {/* Three Buttons */}
         <Stack spacing={3} sx={{ width: "100%", maxWidth: 300 }}>
           <Button
             variant="contained"
