@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* --------------------------- */
+/* Global Reset + Base Styles  */
+/* --------------------------- */
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: #f9fafb;
+}
+
+/* Makes images never overflow */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Smooth transitions for buttons + interactive elements */
+button,
+a {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Remove blue highlight on mobile */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* --------------------------- */
+/* Reusable Utility Classes    */
+/* --------------------------- */
+
+/* Card styling for consistent shadows + rounding (optional) */
+.card {
+  @apply bg-white rounded-xl shadow-sm p-4;
+}
+
+/* Hover scale effect (optional) */
+.hover-scale {
+  transition: transform 0.15s ease-in-out;
+}
+
+.hover-scale:hover {
+  transform: scale(1.03);
+}
+
+/* Navigation active state (optional) */
+.nav-active {
+  @apply text-blue-600 font-bold;
+}
+
+/* Navigation inactive */
+.nav-inactive {
+  @apply text-gray-500;
+}
