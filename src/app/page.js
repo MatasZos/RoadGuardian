@@ -55,7 +55,7 @@ export default function HomePage() {
             variant="contained"
             fullWidth
             sx={{
-              bgcolor: "red",
+              bgcolor: "yellow",
               color: "white",
               fontWeight: "bold",
               fontSize: "18px",
@@ -85,7 +85,7 @@ export default function HomePage() {
             variant="contained"
             fullWidth
             sx={{
-              bgcolor: "orange",
+              bgcolor: "red",
               color: "white",
               fontWeight: "bold",
               fontSize: "18px",
