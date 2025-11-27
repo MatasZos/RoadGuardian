@@ -10,6 +10,8 @@ import {
   Stack,
 } from "@mui/material";
 
+
+import Link from 'next/link'
 import MenuIcon from "@mui/icons-material/Menu";
 
 export default function HomePage() {
