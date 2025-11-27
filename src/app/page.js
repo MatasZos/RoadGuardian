@@ -93,7 +93,7 @@ export default function HomePage() {
               "&:hover": { bgcolor: "#cc7a00" },
             }}
           >
-            <Link href="/information">INFORMATION</Link>
+            <Link href="/information">DOCUMENTS</Link>
           </Button>
         </Stack>
       </Box>
