@@ -82,6 +82,7 @@ export default function HomePage() {
           </Button>
 
           <Button
+          <Link href="/documents">DOCUMENTS</Link>
             variant="contained"
             fullWidth
             sx={{
@@ -93,7 +94,6 @@ export default function HomePage() {
               "&:hover": { bgcolor: "#cc7a00" },
             }}
           >
-            <Link href="/documents">DOCUMENTS</Link>
           </Button>
         </Stack>
       </Box>
