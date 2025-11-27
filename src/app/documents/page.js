@@ -1,8 +1,8 @@
-export default function InformationPage() {
+export default function DocumentsPage() {
   return (
     <main style={{ padding: "2rem", fontFamily: "sans-serif" }}>
       <h1>DOCUMENTS</h1>
-      <p>Here you can schedule routine motorcycle maintenance or check service history.</p>
+      <p>Here you can store all your personal bike related documents.</p>
     </main>
   );
 }
