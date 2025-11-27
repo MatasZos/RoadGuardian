@@ -78,7 +78,7 @@ export default function HomePage() {
               "&:hover": { bgcolor: "#2fa82e" },
             }}
           >
-            <Link href="/breakdown">ASSISTANCE</Link>
+            <Link href="/breakdown">EMERGENCY</Link>
           </Button>
 
           <Button
@@ -93,7 +93,7 @@ export default function HomePage() {
               "&:hover": { bgcolor: "#cc7a00" },
             }}
           >
-            MAINTENANCE
+            
           </Button>
         </Stack>
       </Box>
