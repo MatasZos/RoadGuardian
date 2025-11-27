@@ -61,7 +61,7 @@ export default function HomePage() {
               "&:hover": { bgcolor: "#cc0000" },
             }}
           >
-            EMERGENCY
+            <Link href="/maintenance">MAINTENANCE</Link>
           </Button>
 
           <Button
@@ -76,7 +76,7 @@ export default function HomePage() {
               "&:hover": { bgcolor: "#2fa82e" },
             }}
           >
-            MAP
+            <Link href="/breakdown">ASSISTANCE</Link>
           </Button>
 
           <Button
