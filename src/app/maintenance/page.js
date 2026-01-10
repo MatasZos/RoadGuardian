@@ -7,9 +7,6 @@ import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
 import Divider from "@mui/material/Divider";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -24,36 +21,24 @@ export default function MaintenancePage() {
 
   return (
     <Box sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
-      {/* RoadGuardian (NavBar) */}
+      {/* RoadGuardian NavBar */}
       <AppBar position="static" elevation={0}>
         <Toolbar>
           <Typography variant="h6" sx={{ fontWeight: 700 }}>
             RoadGuardian
           </Typography>
-          <Typography variant="body2" sx={{ ml: 1, opacity: 0.8 }}>
-            (NavBar)
-          </Typography>
         </Toolbar>
       </AppBar>
 
       <Container maxWidth="md" sx={{ py: 4 }}>
-        {/* Maintenance description */}
+        {/* Page title */}
         <Box sx={{ mb: 3 }}>
-          <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
+          <Typography variant="h4" sx={{ fontWeight: 700 }}>
             Maintenance
           </Typography>
-
-          <List dense sx={{ p: 0 }}>
-            <ListItem sx={{ py: 0, px: 0 }}>
-              <ListItemText primary="• The user can log new maintenance issues for their motorcycle" />
-            </ListItem>
-            <ListItem sx={{ py: 0, px: 0 }}>
-              <ListItemText primary="• The user can review previously recorded maintenance repairs" />
-            </ListItem>
-            <ListItem sx={{ py: 0, px: 0 }}>
-              <ListItemText primary="• The user can track their motorcycle’s maintenance history over time" />
-            </ListItem>
-          </List>
+          <Typography variant="body2" sx={{ opacity: 0.8 }}>
+            Log and review your motorcycle maintenance records.
+          </Typography>
         </Box>
 
         {/* Maintenance Log */}
@@ -62,7 +47,7 @@ export default function MaintenancePage() {
             Maintenance Log
           </Typography>
 
-          {/* Add record (prototype only) */}
+          {/* Add maintenance record */}
           <Stack
             direction={{ xs: "column", sm: "row" }}
             spacing={2}
@@ -85,16 +70,20 @@ export default function MaintenancePage() {
             </Button>
           </Stack>
 
-          {/* History list placeholder */}
+          {/* Maintenance History List */}
           <Paper
             variant="outlined"
-            sx={{ borderRadius: 5, p: 2, minHeight: 280 }}
+            sx={{
+              borderRadius: 5,
+              p: 2,
+              minHeight: 280,
+            }}
           >
             <Typography
               variant="body2"
               sx={{ fontWeight: 700, mb: 2, opacity: 0.8 }}
             >
-              Maintenance History List View (Prototype)
+              Maintenance History
             </Typography>
 
             {maintenanceHistory.map((item, idx) => (
