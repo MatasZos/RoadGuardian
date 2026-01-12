@@ -1,5 +1,5 @@
 import Box from "@mui/material/Box";
-import NavBar from "./components/NavBar";
+import NavBar from "./component/NavBar";
 
 export const metadata = {
   title: "RoadGuardian",
