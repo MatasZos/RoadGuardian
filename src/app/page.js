@@ -1,17 +1,14 @@
 "use client";
 
-import {
-  AppBar,
-  Toolbar,
-  IconButton,
-  Box,
-  Avatar,
-  Button,
-  Stack,
-} from "@mui/material";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import Box from "@mui/material/Box";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
 
-
-import Link from 'next/link'
+import Link from "next/link";
 import MenuIcon from "@mui/icons-material/Menu";
 
 export default function HomePage() {
@@ -52,6 +49,8 @@ export default function HomePage() {
       >
         <Stack spacing={3} sx={{ width: "100%", maxWidth: 300 }}>
           <Button
+            component={Link}
+            href="/maintenance"
             variant="contained"
             fullWidth
             sx={{
@@ -63,10 +62,12 @@ export default function HomePage() {
               "&:hover": { bgcolor: "#cc0000" },
             }}
           >
-            <Link href="/maintenance">MAINTENANCE</Link>
+            MAINTENANCE
           </Button>
 
           <Button
+            component={Link}
+            href="/breakdown"
             variant="contained"
             fullWidth
             sx={{
@@ -78,11 +79,12 @@ export default function HomePage() {
               "&:hover": { bgcolor: "#2fa82e" },
             }}
           >
-            <Link href="/breakdown">EMERGENCY</Link>
+            EMERGENCY
           </Button>
 
           <Button
-          
+            component={Link}
+            href="/documents"
             variant="contained"
             fullWidth
             sx={{
@@ -93,8 +95,8 @@ export default function HomePage() {
               py: 1.5,
               "&:hover": { bgcolor: "#cc7a00" },
             }}
-<Link href="/documents">DOCUMENTS</Link>
           >
+            DOCUMENTS
           </Button>
         </Stack>
       </Box>
