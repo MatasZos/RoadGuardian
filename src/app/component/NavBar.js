@@ -7,9 +7,10 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
 
+import Link from "next/link";
 import MenuIcon from "@mui/icons-material/Menu";
 
-export default function NavBar({ title = "RoadGuardian" }) {
+export default function NavBar() {
   return (
     <AppBar position="static" elevation={0} sx={{ bgcolor: "black" }}>
       <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -18,8 +19,20 @@ export default function NavBar({ title = "RoadGuardian" }) {
             <MenuIcon />
           </IconButton>
 
-          <Typography variant="h6" sx={{ fontWeight: 700 }}>
-            {title}
+          {/* Clickable title */}
+          <Typography
+            component={Link}
+            href="/"
+            variant="h6"
+            sx={{
+              fontWeight: 700,
+              cursor: "pointer",
+              textDecoration: "none",
+              color: "inherit",
+              "&:hover": { opacity: 0.85 },
+            }}
+          >
+            RoadGuardian
           </Typography>
         </Box>
 
@@ -34,4 +47,3 @@ export default function NavBar({ title = "RoadGuardian" }) {
     </AppBar>
   );
 }
-
