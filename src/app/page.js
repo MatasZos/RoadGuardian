@@ -11,55 +11,114 @@ import Link from "next/link";
 
 export default function HomePage() {
   return (
-    <Container maxWidth="md" sx={{ py: 6 }}>
-      <Paper
-        elevation={2}
+    <Container maxWidth="lg" sx={{ py: 3 }}>
+      <Box
         sx={{
-          p: 4,
-          borderRadius: 4,
-          textAlign: "center",
+          display: "flex",
+          gap: 3,
+          alignItems: "stretch",
+          flexDirection: { xs: "column", md: "row" },
+          minHeight: { md: "calc(100vh - 120px)" },
         }}
       >
-        <Typography variant="h4" sx={{ fontWeight: 800, mb: 1 }}>
-          RoadGuardian
-        </Typography>
+        {/* Side actions */}
+        <Paper
+          elevation={2}
+          sx={{
+            width: { xs: "100%", md: 320 },
+            borderRadius: 4,
+            p: 2.5,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+          }}
+        >
+          <Typography variant="h6" sx={{ fontWeight: 800, mb: 2 }}>
+            Quick Actions
+          </Typography>
 
-        <Typography variant="body1" sx={{ opacity: 0.75, mb: 4 }}>
-          Your motorcycle safety and assistance companion.
-        </Typography>
+          <Stack spacing={2}>
+            <Button
+              component={Link}
+              href="/maintenance"
+              variant="contained"
+              fullWidth
+              sx={{ fontWeight: 700, py: 1.5 }}
+            >
+              Maintenance
+            </Button>
 
-        <Stack spacing={2} sx={{ maxWidth: 300, mx: "auto" }}>
-          <Button
-            component={Link}
-            href="/maintenance"
-            variant="contained"
-            fullWidth
-            sx={{ fontWeight: 700, py: 1.5 }}
+            <Button
+              component={Link}
+              href="/breakdown"
+              variant="outlined"
+              fullWidth
+              sx={{ fontWeight: 700, py: 1.5 }}
+            >
+              Emergency
+            </Button>
+
+            <Button
+              component={Link}
+              href="/documents"
+              variant="outlined"
+              fullWidth
+              sx={{ fontWeight: 700, py: 1.5 }}
+            >
+              Documents
+            </Button>
+          </Stack>
+
+          <Typography variant="body2" sx={{ mt: 2.5, opacity: 0.75 }}>
+            Map view will appear on the right (prototype placeholder).
+          </Typography>
+        </Paper>
+
+        {/* Map placeholder panel */}
+        <Paper
+          elevation={2}
+          sx={{
+            flexGrow: 1,
+            borderRadius: 4,
+            p: 2.5,
+            display: "flex",
+            flexDirection: "column",
+            minHeight: { xs: 420, md: "auto" },
+          }}
+        >
+          <Typography variant="h6" sx={{ fontWeight: 800, mb: 2 }}>
+            Map
+          </Typography>
+
+          <Box
+            sx={{
+              flexGrow: 1,
+              minHeight: 420,
+              borderRadius: 3,
+              border: "1px dashed",
+              borderColor: "divider",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              bgcolor: "background.paper",
+              px: 2,
+              textAlign: "center",
+            }}
           >
-            Maintenance
-          </Button>
-
-          <Button
-            component={Link}
-            href="/breakdown"
-            variant="outlined"
-            fullWidth
-            sx={{ fontWeight: 700, py: 1.5 }}
-          >
-            Emergency
-          </Button>
-
-          <Button
-            component={Link}
-            href="/documents"
-            variant="outlined"
-            fullWidth
-            sx={{ fontWeight: 700, py: 1.5 }}
-          >
-            Documents
-          </Button>
-        </Stack>
-      </Paper>
+            <Box>
+              <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+                Map Placeholder
+              </Typography>
+              <Typography variant="body2" sx={{ opacity: 0.75, mt: 0.5 }}>
+                Add an image, embed, or interactive map here later.
+              </Typography>
+              <Typography variant="caption" sx={{ opacity: 0.6, mt: 1, display: "block" }}>
+                Suggested size: full width, min height 420px
+              </Typography>
+            </Box>
+          </Box>
+        </Paper>
+      </Box>
     </Container>
   );
 }
