@@ -1,4 +1,4 @@
-export default function breakdownPage() {
+export default function BreakdownPage() {
   return (
     <main style={{ padding: "2rem", fontFamily: "sans-serif" }}>
       <h1>Breakdown</h1>
