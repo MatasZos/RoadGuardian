@@ -14,12 +14,13 @@ export default function NavBar() {
   return (
     <AppBar position="static" elevation={0} sx={{ bgcolor: "black" }}>
       <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+        {/* Left side */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <IconButton size="large" edge="start" color="inherit">
             <MenuIcon />
           </IconButton>
 
-          {/* Clickable title */}
+          {/* Title → Home */}
           <Typography
             component={Link}
             href="/"
@@ -36,13 +37,24 @@ export default function NavBar() {
           </Typography>
         </Box>
 
-        <Avatar
-          sx={{
-            bgcolor: "transparent",
-            color: "#00b0ff",
-            border: "2px solid #00b0ff",
-          }}
-        />
+        {/* Profile → Login */}
+        <IconButton
+          component={Link}
+          href="/login"
+          sx={{ p: 0 }}
+          aria-label="Go to login"
+        >
+          <Avatar
+            sx={{
+              bgcolor: "transparent",
+              color: "#00b0ff",
+              border: "2px solid #00b0ff",
+              width: 36,
+              height: 36,
+              "&:hover": { opacity: 0.85 },
+            }}
+          />
+        </IconButton>
       </Toolbar>
     </AppBar>
   );
