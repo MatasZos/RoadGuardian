@@ -8,7 +8,7 @@ import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 
 import Link from "next/link";
-import GoogleMapAdvanced from "./components/GoogleMapAdvanced";
+import GoogleMapAdvanced from "./component/GoogleMapAdvanced";
 
 export default function HomePage() {
   return (
