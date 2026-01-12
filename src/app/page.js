@@ -1,13 +1,14 @@
 "use client";
 
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Stack from "@mui/material/Stack";
 import Container from "@mui/material/Container";
+import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
 
 import Link from "next/link";
+import GoogleMapAdvanced from "./component/GoogleMapAdvanced";
 
 export default function HomePage() {
   return (
@@ -21,7 +22,7 @@ export default function HomePage() {
           minHeight: { md: "calc(100vh - 120px)" },
         }}
       >
-        {/* Side panel (buttons) */}
+        {/* Side buttons */}
         <Paper
           elevation={2}
           sx={{
@@ -91,7 +92,7 @@ export default function HomePage() {
           </Stack>
         </Paper>
 
-        {/* Map panel (placeholder) */}
+        {/* Map */}
         <Paper
           elevation={2}
           sx={{
@@ -100,33 +101,15 @@ export default function HomePage() {
             p: 2.5,
             display: "flex",
             flexDirection: "column",
-            minHeight: { xs: 360, md: "auto" },
+            minHeight: { xs: 420, md: "auto" },
           }}
         >
-          <Box sx={{ display: "flex", alignItems: "baseline", gap: 1, mb: 2 }}>
-            <Typography variant="h6" sx={{ fontWeight: 800 }}>
-              Map
-            </Typography>
-            <Typography variant="body2" sx={{ opacity: 0.7 }}>
-              (Google Maps placeholder)
-            </Typography>
-          </Box>
+          <Typography variant="h6" sx={{ fontWeight: 800, mb: 2 }}>
+            Map
+          </Typography>
 
-          <Box
-            sx={{
-              flexGrow: 1,
-              borderRadius: 3,
-              border: "1px solid",
-              borderColor: "divider",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              bgcolor: "background.paper",
-            }}
-          >
-            <Typography variant="body2" sx={{ opacity: 0.75 }}>
-              Google Map goes here
-            </Typography>
+          <Box sx={{ flexGrow: 1, minHeight: 420 }}>
+            <GoogleMapAdvanced />
           </Box>
         </Paper>
       </Box>
