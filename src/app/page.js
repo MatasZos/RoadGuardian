@@ -8,7 +8,7 @@ import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 
 import Link from "next/link";
-import GoogleMapAdvanced from "./component/GoogleMapAdvanced";
+import GoogleMapAdvanced from "./components/GoogleMapAdvanced";
 
 export default function HomePage() {
   return (
@@ -22,7 +22,7 @@ export default function HomePage() {
           minHeight: { md: "calc(100vh - 120px)" },
         }}
       >
-        {/* Side buttons */}
+        {/* Side actions */}
         <Paper
           elevation={2}
           sx={{
@@ -45,51 +45,44 @@ export default function HomePage() {
               variant="contained"
               fullWidth
               sx={{
-                bgcolor: "yellow",
-                color: "white",
-                fontWeight: 800,
-                fontSize: "16px",
+                bgcolor: "primary.main",
+                fontWeight: 700,
                 py: 1.5,
-                "&:hover": { bgcolor: "#d6c800" },
               }}
             >
-              MAINTENANCE
+              Maintenance
             </Button>
 
             <Button
               component={Link}
               href="/breakdown"
-              variant="contained"
+              variant="outlined"
               fullWidth
               sx={{
-                bgcolor: "limegreen",
-                color: "white",
-                fontWeight: 800,
-                fontSize: "16px",
+                fontWeight: 700,
                 py: 1.5,
-                "&:hover": { bgcolor: "#2fa82e" },
               }}
             >
-              EMERGENCY
+              Emergency
             </Button>
 
             <Button
               component={Link}
               href="/documents"
-              variant="contained"
+              variant="outlined"
               fullWidth
               sx={{
-                bgcolor: "red",
-                color: "white",
-                fontWeight: 800,
-                fontSize: "16px",
+                fontWeight: 700,
                 py: 1.5,
-                "&:hover": { bgcolor: "#cc0000" },
               }}
             >
-              DOCUMENTS
+              Documents
             </Button>
           </Stack>
+
+          <Typography variant="body2" sx={{ mt: 2.5, opacity: 0.75 }}>
+            View nearby riders and access key features.
+          </Typography>
         </Paper>
 
         {/* Map */}
