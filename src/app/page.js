@@ -8,104 +8,58 @@ import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 
 import Link from "next/link";
-import GoogleMapAdvanced from "./component/GoogleMapAdvanced";
 
 export default function HomePage() {
   return (
-    <Container maxWidth="lg" sx={{ py: 3 }}>
-      <Box
+    <Container maxWidth="md" sx={{ py: 6 }}>
+      <Paper
+        elevation={2}
         sx={{
-          display: "flex",
-          gap: 3,
-          alignItems: "stretch",
-          flexDirection: { xs: "column", md: "row" },
-          minHeight: { md: "calc(100vh - 120px)" },
+          p: 4,
+          borderRadius: 4,
+          textAlign: "center",
         }}
       >
-        {/* Side actions */}
-        <Paper
-          elevation={2}
-          sx={{
-            width: { xs: "100%", md: 320 },
-            borderRadius: 4,
-            p: 2.5,
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-          }}
-        >
-          <Typography variant="h6" sx={{ fontWeight: 800, mb: 2 }}>
-            Quick Actions
-          </Typography>
+        <Typography variant="h4" sx={{ fontWeight: 800, mb: 1 }}>
+          RoadGuardian
+        </Typography>
 
-          <Stack spacing={2}>
-            <Button
-              component={Link}
-              href="/maintenance"
-              variant="contained"
-              fullWidth
-              sx={{
-                bgcolor: "primary.main",
-                fontWeight: 700,
-                py: 1.5,
-              }}
-            >
-              Maintenance
-            </Button>
+        <Typography variant="body1" sx={{ opacity: 0.75, mb: 4 }}>
+          Your motorcycle safety and assistance companion.
+        </Typography>
 
-            <Button
-              component={Link}
-              href="/breakdown"
-              variant="outlined"
-              fullWidth
-              sx={{
-                fontWeight: 700,
-                py: 1.5,
-              }}
-            >
-              Emergency
-            </Button>
+        <Stack spacing={2} sx={{ maxWidth: 300, mx: "auto" }}>
+          <Button
+            component={Link}
+            href="/maintenance"
+            variant="contained"
+            fullWidth
+            sx={{ fontWeight: 700, py: 1.5 }}
+          >
+            Maintenance
+          </Button>
 
-            <Button
-              component={Link}
-              href="/documents"
-              variant="outlined"
-              fullWidth
-              sx={{
-                fontWeight: 700,
-                py: 1.5,
-              }}
-            >
-              Documents
-            </Button>
-          </Stack>
+          <Button
+            component={Link}
+            href="/breakdown"
+            variant="outlined"
+            fullWidth
+            sx={{ fontWeight: 700, py: 1.5 }}
+          >
+            Emergency
+          </Button>
 
-          <Typography variant="body2" sx={{ mt: 2.5, opacity: 0.75 }}>
-            View nearby riders and access key features.
-          </Typography>
-        </Paper>
-
-        {/* Map */}
-        <Paper
-          elevation={2}
-          sx={{
-            flexGrow: 1,
-            borderRadius: 4,
-            p: 2.5,
-            display: "flex",
-            flexDirection: "column",
-            minHeight: { xs: 420, md: "auto" },
-          }}
-        >
-          <Typography variant="h6" sx={{ fontWeight: 800, mb: 2 }}>
-            Map
-          </Typography>
-
-          <Box sx={{ flexGrow: 1, minHeight: 420 }}>
-            <GoogleMapAdvanced />
-          </Box>
-        </Paper>
-      </Box>
+          <Button
+            component={Link}
+            href="/documents"
+            variant="outlined"
+            fullWidth
+            sx={{ fontWeight: 700, py: 1.5 }}
+          >
+            Documents
+          </Button>
+        </Stack>
+      </Paper>
     </Container>
   );
 }
