@@ -14,7 +14,7 @@ export default function LoginPage() {
           <input type="password" id="password" name="password" required />
         </div>
         <button type="submit" style={{ marginTop: "1rem" }}>
-          Login
+          Login Now
         </button>
       </form>
     </main>
