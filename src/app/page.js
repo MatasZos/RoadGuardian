@@ -69,9 +69,6 @@ export default function HomePage() {
             </Button>
           </Stack>
 
-          <Typography variant="body2" sx={{ mt: 2.5, opacity: 0.75 }}>
-            Map view will appear on the right (prototype placeholder).
-          </Typography>
         </Paper>
 
         {/* Map placeholder panel */}
