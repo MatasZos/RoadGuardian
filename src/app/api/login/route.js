@@ -1,19 +1,16 @@
-import { MongoClient } from "mongodb"
+import { MongoClient } from "mongodb";
 import bcrypt from "bcrypt";
 
 const url = "mongodb+srv://admin:pass@roadguardiancluster.kpvvhx4.mongodb.net/roadguardian?";
-const dbName = "app"
+const dbName = "app";
 
-export async function GET(req, res) {
+export async function GET(req) {
+  try {
+    console.log("in the login api page");
 
-  console.log("in the login api page")
-
-    const { searchParams } = new URL(req.url)
-    const email = searchParams.get("email")
-    const password = searchParams.get("password")
-
-    console.log("email:", email)
-    console.log("password:", password)
+    const { searchParams } = new URL(req.url);
+    const email = searchParams.get("email");
+    const password = searchParams.get("password");
 
     if (!email || !password) {
       return Response.json(
@@ -22,35 +19,34 @@ export async function GET(req, res) {
       );
     }
 
-    const client = new MongoClient(url)
-    await client.connect()
-    console.log("Connected successfully")
+    const client = new MongoClient(url);
+    await client.connect();
 
     const db = client.db(dbName);
-    const collection = db.collection("login")
+    const collection = db.collection("login");
 
-    const user = await collection.findOne({ email: email })
+    const user = await collection.findOne({ email });
 
     if (!user) {
-      await client.close()
-      console.log("user not found")
-      return Response.json({ data: "invalid" })
+      await client.close();
+      return Response.json({ data: "invalid" });
     }
 
-    const hashResult = bcrypt.compareSync(password, user.password)
-    console.log("Hash Comparison Result:" , hashResult)
+    const isValid = await bcrypt.compare(password, user.password);
 
-    await client.close()
+    await client.close();
 
-    if (!hashResult) {
-      console.log("wrong password")
-      return Response.json({ data: "invalid" })
+    if (!isValid) {
+      return Response.json({ data: "invalid" });
     }
-
-    console.log("login valid")
 
     return Response.json({
       data: "valid",
-      account_type: user.account_type || "customer"
-    })
+      account_type: user.account_type || "customer",
+    });
+
+  } catch (err) {
+    console.error(err);
+    return Response.json({ error: "Server error" }, { status: 500 });
+  }
 }
