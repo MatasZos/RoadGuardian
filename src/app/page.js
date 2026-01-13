@@ -12,38 +12,38 @@ import Link from "next/link";
 export default function HomePage() {
   return (
     <Container maxWidth="lg" sx={{ py: 3 }}>
-      <Box
-        sx={{
-          display: "flex",
-          gap: 3,
-          alignItems: "stretch",
-          flexDirection: { xs: "column", md: "row" },
-          minHeight: { md: "calc(100vh - 120px)" },
-        }}
-      >
-        {/* Side actions */}
-        <Paper
-          elevation={2}
+      {/* ======================
+          QUICK ACTIONS (TOP)
+      ====================== */}
+      <Paper elevation={0} sx={{ p: 2, mb: 3 }}>
+        <Box
           sx={{
-            width: { xs: "100%", md: 320 },
-            borderRadius: 4,
-            p: 2.5,
             display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
+            alignItems: { xs: "stretch", md: "center" },
+            justifyContent: "space-between",
+            flexDirection: { xs: "column", md: "row" },
+            gap: 2,
           }}
         >
-          <Typography variant="h6" sx={{ fontWeight: 800, mb: 2 }}>
-            Quick Actions
-          </Typography>
+          <Box>
+            <Typography variant="h6" sx={{ fontWeight: 800 }}>
+              Quick Actions
+            </Typography>
+            <Typography variant="body2" sx={{ opacity: 0.75 }}>
+              Access key features quickly
+            </Typography>
+          </Box>
 
-          <Stack spacing={2}>
+          <Stack
+            direction={{ xs: "column", sm: "row" }}
+            spacing={2}
+            sx={{ width: { xs: "100%", md: "auto" } }}
+          >
             <Button
               component={Link}
               href="/maintenance"
               variant="contained"
-              fullWidth
-              sx={{ fontWeight: 700, py: 1.5 }}
+              sx={{ minWidth: 160 }}
             >
               Maintenance
             </Button>
@@ -51,9 +51,9 @@ export default function HomePage() {
             <Button
               component={Link}
               href="/breakdown"
-              variant="outlined"
-              fullWidth
-              sx={{ fontWeight: 700, py: 1.5 }}
+              variant="contained"
+              className="btn-danger"
+              sx={{ minWidth: 160 }}
             >
               Emergency
             </Button>
@@ -62,60 +62,43 @@ export default function HomePage() {
               component={Link}
               href="/documents"
               variant="outlined"
-              fullWidth
-              sx={{ fontWeight: 700, py: 1.5 }}
+              sx={{ minWidth: 160 }}
             >
               Documents
             </Button>
           </Stack>
+        </Box>
+      </Paper>
 
-        </Paper>
+      {/* ======================
+          MAIN CONTENT 
+      ====================== */}
+      <Paper elevation={0} sx={{ p: 2.5 }}>
+        <Typography variant="h6" sx={{ fontWeight: 800, mb: 2 }}>
+          Area Overview
+        </Typography>
 
-        {/* Map placeholder panel */}
-        <Paper
-          elevation={2}
+        <Box
           sx={{
-            flexGrow: 1,
-            borderRadius: 4,
-            p: 2.5,
-            display: "flex",
-            flexDirection: "column",
-            minHeight: { xs: 420, md: "auto" },
+            height: { xs: 420, md: 560 },
+            borderRadius: 2,
+            overflow: "hidden",
+            border: "1px solid",
+            borderColor: "divider",
           }}
         >
-          <Typography variant="h6" sx={{ fontWeight: 800, mb: 2 }}>
-            Map
-          </Typography>
-
-          <Box
-            sx={{
-              flexGrow: 1,
-              minHeight: 420,
-              borderRadius: 3,
-              border: "1px dashed",
-              borderColor: "divider",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              bgcolor: "background.paper",
-              px: 2,
-              textAlign: "center",
+          <img
+            src="/images/map.png"
+            alt="Map overview"
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              display: "block",
             }}
-          >
-            <Box>
-              <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-                Map Placeholder
-              </Typography>
-              <Typography variant="body2" sx={{ opacity: 0.75, mt: 0.5 }}>
-                Add an image, embed, or interactive map here later.
-              </Typography>
-              <Typography variant="caption" sx={{ opacity: 0.6, mt: 1, display: "block" }}>
-                Suggested size: full width, min height 420px
-              </Typography>
-            </Box>
-          </Box>
-        </Paper>
-      </Box>
+          />
+        </Box>
+      </Paper>
     </Container>
   );
 }
