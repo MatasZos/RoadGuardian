@@ -1,7 +1,7 @@
 import { MongoClient } from "mongodb"
 import bcrypt from "bcrypt";
 
-const url = "mongodb+srv://root:pass@cluster0.ksxhnxp.mongodb.net/?appName=Cluster0";
+const url = "mongodb+srv://admin:<db_password>@roadguardiancluster.kpvvhx4.mongodb.net/?appName=roadguardiancluster";
 const dbName = "app"
 
 export async function GET(req, res) {
@@ -69,4 +69,5 @@ export async function GET(req, res) {
 
     return Response.json({ data: "valid" })
 }
+
 
