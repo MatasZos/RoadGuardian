@@ -34,13 +34,8 @@ a {
 }
 
 /* =========================
-   LAYOUT / PANELS
+   PANELS / PAPER
 ========================= */
-.MuiContainer-root {
-  padding-top: 24px;
-  padding-bottom: 24px;
-}
-
 .MuiPaper-root {
   background-color: #ffffff !important;
   color: #0f172a !important;
@@ -62,7 +57,7 @@ a {
 }
 
 /* =========================
-   BUTTONS
+   BUTTONS (BASE)
 ========================= */
 .MuiButton-root {
   border-radius: 12px !important;
@@ -71,7 +66,7 @@ a {
   padding: 10px 16px !important;
 }
 
-/* Primary buttons */
+/* Primary buttons (Maintenance) */
 .MuiButton-contained {
   background-color: #2563eb !important;
   color: #ffffff !important;
@@ -81,24 +76,8 @@ a {
   background-color: #1d4ed8 !important;
 }
 
-/* Outlined buttons */
-.MuiButton-outlined {
-  border-color: #cbd5f5 !important;
-  color: #2563eb !important;
-}
-
-.MuiButton-outlined:hover {
-  background-color: rgba(37, 99, 235, 0.08) !important;
-}
-
-/* Text buttons */
-.MuiButton-text {
-  color: #2563eb !important;
-}
-
 /* =========================
-   EMERGENCY / DANGER BUTTON
-   (use className="btn-danger")
+   EMERGENCY BUTTON (RED)
 ========================= */
 .btn-danger {
   background-color: #dc2626 !important;
@@ -107,6 +86,18 @@ a {
 
 .btn-danger:hover {
   background-color: #b91c1c !important;
+}
+
+/* =========================
+   DOCUMENTS BUTTON (TEAL)
+========================= */
+.btn-documents {
+  background-color: #0d9488 !important;
+  color: #ffffff !important;
+}
+
+.btn-documents:hover {
+  background-color: #0f766e !important;
 }
 
 /* =========================
