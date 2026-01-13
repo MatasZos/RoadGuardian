@@ -72,7 +72,7 @@ export default function BreakdownPage() {
               </Typography>
 
               <Typography variant="body2" sx={{ opacity: 0.75 }}>
-                Estimated response time: {isActive ? "10–20 mins (prototype)" : "—"}
+                Estimated response time: {isActive ? "10–20 mins" : "—"}
               </Typography>
             </Stack>
           </Paper>
