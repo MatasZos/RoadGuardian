@@ -1,13 +1,13 @@
 /* =========================
-   GLOBAL RESET
+   BASE THEME
 ========================= */
 * {
   box-sizing: border-box;
 }
 
 html, body {
-  padding: 0;
   margin: 0;
+  padding: 0;
   background-color: #0b0f12;
   color: #eaeaea;
   font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
@@ -22,127 +22,89 @@ a {
 }
 
 /* =========================
-   HERO / IMAGE FOCUS
+   NAVBAR
 ========================= */
-.hero {
-  position: relative;
-  width: 100%;
-  height: calc(100vh - 64px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-.hero img {
-  max-width: 90%;
-  max-height: 90%;
-  object-fit: contain;
-  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.6));
-}
-
-/* Dark overlay to keep text readable */
-.hero::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    circle at center,
-    rgba(0, 0, 0, 0.3),
-    rgba(0, 0, 0, 0.85)
-  );
+.MuiAppBar-root {
+  background-color: #0b0f12 !important;
+  border-bottom: 1px solid #1f252b;
 }
 
 /* =========================
-   ACTION PANEL (Buttons)
+   PAGE LAYOUT
 ========================= */
-.action-panel {
-  position: absolute;
-  right: 48px;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  z-index: 2;
+.page {
+  padding: 32px;
+}
+
+.panel {
+  background-color: #12171c;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
 }
 
 /* =========================
-   BUTTON THEMING
+   BUTTONS
 ========================= */
-button {
+.MuiButton-root {
   font-weight: 700;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
+  border-radius: 10px;
+  padding: 12px 16px;
 }
 
-/* Maintenance */
+/* Primary (Maintenance) */
 .btn-maintenance {
-  background-color: #ff9800 !important;
+  background-color: #ff8f00 !important;
   color: #000 !important;
 }
 
 .btn-maintenance:hover {
-  background-color: #e68900 !important;
+  background-color: #e65100 !important;
 }
 
-/* Emergency (VERY IMPORTANT) */
+/* Emergency (MOST IMPORTANT) */
 .btn-emergency {
   background-color: #d32f2f !important;
   color: #fff !important;
-  box-shadow: 0 0 0 2px rgba(211, 47, 47, 0.4);
+  box-shadow: 0 0 0 2px rgba(211, 47, 47, 0.5);
 }
 
 .btn-emergency:hover {
   background-color: #b71c1c !important;
 }
 
-/* Documents */
+/* Secondary */
 .btn-documents {
-  background-color: #1e88e5 !important;
-  color: #fff !important;
+  background-color: #1f252b !important;
+  color: #eaeaea !important;
+  border: 1px solid #2e343b;
 }
 
 .btn-documents:hover {
-  background-color: #1565c0 !important;
+  background-color: #2e343b !important;
 }
 
 /* =========================
-   PAGE SECTIONS
+   TYPOGRAPHY
 ========================= */
-.page {
-  padding: 32px;
-}
-
-.page-title {
-  font-size: 2rem;
+h1, h2, h3, h4, h5, h6 {
   font-weight: 800;
-  margin-bottom: 8px;
 }
 
-.page-subtitle {
-  opacity: 0.7;
-  margin-bottom: 24px;
-}
-
-/* =========================
-   CARDS / PANELS
-========================= */
-.panel {
-  background-color: #12171c;
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+.subtitle {
+  color: #9e9e9e;
 }
 
 /* =========================
-   EMERGENCY PAGE FOCUS
+   EMERGENCY PAGE
 ========================= */
 .emergency-panel {
   border: 2px solid #d32f2f;
   background: linear-gradient(
     180deg,
     rgba(211, 47, 47, 0.15),
-    rgba(0, 0, 0, 0.6)
+    rgba(18, 23, 28, 0.9)
   );
 }
 
@@ -152,19 +114,30 @@ button {
 }
 
 /* =========================
+   FORMS
+========================= */
+.MuiTextField-root label {
+  color: #9e9e9e;
+}
+
+.MuiInputBase-root {
+  background-color: #12171c;
+  color: #eaeaea;
+}
+
+.MuiOutlinedInput-notchedOutline {
+  border-color: #2e343b;
+}
+
+.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+  border-color: #ff8f00;
+}
+
+/* =========================
    RESPONSIVE
 ========================= */
-@media (max-width: 900px) {
-  .action-panel {
-    position: static;
-    transform: none;
-    margin-top: 24px;
-    align-items: stretch;
-  }
-
-  .hero {
-    flex-direction: column;
-    height: auto;
-    padding: 32px 0;
+@media (max-width: 768px) {
+  .page {
+    padding: 20px;
   }
 }
