@@ -54,3 +54,4 @@ export async function GET(req, res) {
       account_type: user.account_type || "customer"
     })
 }
+
