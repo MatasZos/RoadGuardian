@@ -1,143 +1,219 @@
 /* =========================
-   BASE THEME
+   BASE
 ========================= */
+:root {
+  --rg-bg: #0b0f12;
+  --rg-panel: #12171c;
+  --rg-border: #1f252b;
+  --rg-border-2: #2e343b;
+
+  --rg-text: #eaeaea;
+  --rg-muted: #9e9e9e;
+
+  --rg-orange: #ff8f00;
+  --rg-orange-dark: #e65100;
+
+  --rg-red: #d32f2f;
+  --rg-red-dark: #b71c1c;
+}
+
 * {
   box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
-  background-color: #0b0f12;
-  color: #eaeaea;
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--rg-bg) !important;
+  color: var(--rg-text) !important;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Arial, sans-serif !important;
 }
 
-/* =========================
-   LINKS
-========================= */
 a {
   color: inherit;
   text-decoration: none;
 }
 
 /* =========================
-   NAVBAR
+   GLOBAL MUI BACKGROUND
+========================= */
+
+/* MUI body baseline + root background */
+.MuiCssBaseline-root,
+#root,
+#__next {
+  background: var(--rg-bg) !important;
+  color: var(--rg-text) !important;
+}
+
+/* Any generic container background */
+.MuiContainer-root {
+  color: var(--rg-text) !important;
+}
+
+/* =========================
+   NAVBAR / APPBAR
 ========================= */
 .MuiAppBar-root {
-  background-color: #0b0f12 !important;
-  border-bottom: 1px solid #1f252b;
+  background: var(--rg-bg) !important;
+  border-bottom: 1px solid var(--rg-border) !important;
+}
+
+/* Toolbar title, icons */
+.MuiToolbar-root,
+.MuiAppBar-root * {
+  color: var(--rg-text) !important;
 }
 
 /* =========================
-   PAGE LAYOUT
+   PAPER / PANELS / CARDS
 ========================= */
-.page {
-  padding: 32px;
+.MuiPaper-root {
+  background: var(--rg-panel) !important;
+  color: var(--rg-text) !important;
+  border: 1px solid var(--rg-border) !important;
+  background-image: none !important;
 }
 
-.panel {
-  background-color: #12171c;
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
-}
-
-/* =========================
-   BUTTONS
-========================= */
-.MuiButton-root {
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  border-radius: 10px;
-  padding: 12px 16px;
-}
-
-/* Primary (Maintenance) */
-.btn-maintenance {
-  background-color: #ff8f00 !important;
-  color: #000 !important;
-}
-
-.btn-maintenance:hover {
-  background-color: #e65100 !important;
-}
-
-/* Emergency (MOST IMPORTANT) */
-.btn-emergency {
-  background-color: #d32f2f !important;
-  color: #fff !important;
-  box-shadow: 0 0 0 2px rgba(211, 47, 47, 0.5);
-}
-
-.btn-emergency:hover {
-  background-color: #b71c1c !important;
-}
-
-/* Secondary */
-.btn-documents {
-  background-color: #1f252b !important;
-  color: #eaeaea !important;
-  border: 1px solid #2e343b;
-}
-
-.btn-documents:hover {
-  background-color: #2e343b !important;
+/* Divider */
+.MuiDivider-root {
+  border-color: var(--rg-border) !important;
 }
 
 /* =========================
    TYPOGRAPHY
 ========================= */
-h1, h2, h3, h4, h5, h6 {
-  font-weight: 800;
+.MuiTypography-root {
+  color: var(--rg-text) !important;
 }
 
-.subtitle {
-  color: #9e9e9e;
-}
-
-/* =========================
-   EMERGENCY PAGE
-========================= */
-.emergency-panel {
-  border: 2px solid #d32f2f;
-  background: linear-gradient(
-    180deg,
-    rgba(211, 47, 47, 0.15),
-    rgba(18, 23, 28, 0.9)
-  );
-}
-
-.emergency-text {
-  color: #ff5252;
-  font-weight: 700;
+.MuiTypography-body2,
+.MuiTypography-caption {
+  color: var(--rg-muted) !important;
 }
 
 /* =========================
-   FORMS
+   TEXTFIELDS / INPUTS
 ========================= */
-.MuiTextField-root label {
-  color: #9e9e9e;
+.MuiFormLabel-root,
+.MuiInputLabel-root {
+  color: var(--rg-muted) !important;
 }
 
+/* Input text color */
 .MuiInputBase-root {
-  background-color: #12171c;
-  color: #eaeaea;
+  color: var(--rg-text) !important;
+}
+
+/* Outlined input background + border */
+.MuiOutlinedInput-root {
+  background: #0f1418 !important;
+  border-radius: 12px !important;
 }
 
 .MuiOutlinedInput-notchedOutline {
-  border-color: #2e343b;
+  border-color: var(--rg-border-2) !important;
 }
 
+/* Hover + focus border */
 .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
-  border-color: #ff8f00;
+  border-color: var(--rg-orange) !important;
+}
+
+.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: var(--rg-orange) !important;
+  border-width: 2px !important;
+}
+
+/* Focused label */
+.MuiInputLabel-root.Mui-focused {
+  color: var(--rg-orange) !important;
 }
 
 /* =========================
-   RESPONSIVE
+   BUTTONS (GENERAL)
 ========================= */
-@media (max-width: 768px) {
-  .page {
-    padding: 20px;
-  }
+.MuiButton-root {
+  font-weight: 800 !important;
+  letter-spacing: 0.04em !important;
+  border-radius: 12px !important;
+  padding: 12px 16px !important;
+  text-transform: none !important;
+}
+
+/* Default contained button -> orange brand */
+.MuiButton-contained {
+  background: var(--rg-orange) !important;
+  color: #0b0f12 !important;
+}
+
+.MuiButton-contained:hover {
+  background: var(--rg-orange-dark) !important;
+}
+
+/* Outlined buttons */
+.MuiButton-outlined {
+  border-color: var(--rg-border-2) !important;
+  color: var(--rg-text) !important;
+  background: transparent !important;
+}
+
+.MuiButton-outlined:hover {
+  border-color: var(--rg-orange) !important;
+  background: rgba(255, 143, 0, 0.08) !important;
+}
+
+/* Text buttons */
+.MuiButton-text {
+  color: var(--rg-orange) !important;
+}
+
+.MuiButton-text:hover {
+  background: rgba(255, 143, 0, 0.08) !important;
+}
+
+/* =========================
+   EMERGENCY BUTTON (RED)
+   Use className="btn-emergency"
+========================= */
+.btn-emergency {
+  background: var(--rg-red) !important;
+  color: #fff !important;
+  box-shadow: 0 0 0 2px rgba(211, 47, 47, 0.35) !important;
+}
+
+.btn-emergency:hover {
+  background: var(--rg-red-dark) !important;
+}
+
+/* Emergency outlined variant (optional) */
+.btn-emergency-outlined {
+  border: 2px solid var(--rg-red) !important;
+  color: var(--rg-red) !important;
+}
+
+.btn-emergency-outlined:hover {
+  background: rgba(211, 47, 47, 0.12) !important;
+}
+
+/* =========================
+   CHECKBOX / SWITCH
+========================= */
+.MuiCheckbox-root {
+  color: var(--rg-muted) !important;
+}
+
+.MuiCheckbox-root.Mui-checked {
+  color: var(--rg-orange) !important;
+}
+
+/* =========================
+   OPTIONAL: map placeholder box
+========================= */
+.map-placeholder {
+  border: 1px dashed var(--rg-border-2);
+  border-radius: 14px;
+  background: #0f1418;
 }
