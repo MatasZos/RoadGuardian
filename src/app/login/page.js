@@ -11,107 +11,103 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
-
 import NextLink from 'next/link';
-import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
-  const router = useRouter();
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const handleSubmit = (event) => {
+  console.log("handling login submit")
+  event.preventDefault()
 
-    const data = new FormData(event.currentTarget);
-    const email = data.get('email');
-    const password = data.get('password');
+  const data = new FormData(event.currentTarget);
 
-    if (!email || !password) {
-      console.log("Missing email or password");
-      return;
-    }
+   let email = data.get('email')
+   let password = data.get('password')
 
-    const url = `/api/login?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`;
+   console.log("Sent email:" + email)
+   console.log("Sent password:" + password)
 
-    try {
-      const res = await fetch(url);
-      const result = await res.json();
+   runDBCallAsync(`/api/login?email=${email}&password=${password}`)
 
-      console.log("Login API response:", result);
+ }; // end handle submit
 
-      if (result.data === "valid") {
-        if (result.account_type === "manager") {
-          router.push("/manager");
-        } else {
-          router.push("/customer");
-        }
+
+async function runDBCallAsync(url) {
+    const res = await fetch(url)
+    const data = await res.json()
+
+    console.log("Login API response:", data)
+
+    if(data.data== "valid"){
+      console.log("login is valid!")
+
+      if (data.account_type == "manager") {
+        window.location.href = "/manager"
       } else {
-        console.log("Login invalid");
+        window.location.href = "/customer"
       }
-
-    } catch (err) {
-      console.error("Login request failed:", err);
+    } else {
+      console.log("not valid")
     }
-  };
+  }
 
   return (
     <Container maxWidth="sm">
-      <Box sx={{ height: '100vh', display: 'flex', alignItems: 'center' }}>
-        <Box
-          component="form"
-          onSubmit={handleSubmit}
-          noValidate
-          sx={{ mt: 1, width: '100%' }}
-        >
-          <Typography variant="h5" sx={{ mb: 2, textAlign: 'center' }}>
-            Login
-          </Typography>
+    <Box sx={{ height: '100vh', display: 'flex', alignItems: 'center' }} >
 
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            type="email"
-            autoComplete="email"
-            autoFocus
-          />
+    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1, width: '100%' }}>
 
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-          />
+      <Typography variant='h5' sx={{ mb: 2, textAlign: 'center'}}>
+        Login
+      </Typography>
 
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
+    <TextField
+      margin="normal"
+      required
+      fullWidth
+      id="email"
+      label="Email Address"
+      name="email"
+      type="email"
+      autoComplete="email"
+      autoFocus
+    />
 
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-          >
-            LOG IN
-          </Button>
+    <TextField
+      margin="normal"
+      required
+      fullWidth
+      name="password"
+      label="Password"
+      type="password"
+      id="password"
+      autoComplete="current-password"
+    />
 
-          <Grid container justifyContent="flex-end">
-            <Grid item>
-              <Link component={NextLink} href="/register" variant="body2">
-                Don&apos;t have an account? Register
-              </Link>
-            </Grid>
-          </Grid>
-        </Box>
-      </Box>
-    </Container>
-  );
+    <FormControlLabel
+      control={<Checkbox value="remember" color="primary" />}
+      label="Remember me"
+    />
+
+    <Button
+      type="submit"
+      fullWidth
+      variant="contained"
+      sx={{ mt: 3, mb: 2 }}
+    >
+      LOG IN
+    </Button>
+
+    <Grid container justifyContent="flex-end">
+      <Grid item>
+        <Link component={NextLink} href="/register" variant="body2">
+         Don&apos;t have an account? Register
+        </Link>
+      </Grid>
+    </Grid>
+</Box>
+</Box>
+       </Container>
+
+  ); // end return
 }
