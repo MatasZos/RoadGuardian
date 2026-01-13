@@ -1,4 +1,5 @@
 import Box from "@mui/material/Box";
+import "./global.css";
 import NavBar from "./component/NavBar";
 
 export const metadata = {
