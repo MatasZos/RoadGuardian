@@ -1,7 +1,7 @@
 import { MongoClient } from "mongodb";
 import bcrypt from "bcrypt";
 
-const url = "mongodb+srv://admin:pass@roadguardiancluster.kpvvhx4.mongodb.net/roadguardian?";
+const url = "mongodb+srv://admin:<db_password>@roadguardiancluster.kpvvhx4.mongodb.net/?appName=roadguardiancluster";
 const dbName = "app";
 
 export async function GET(req) {
@@ -50,3 +50,4 @@ export async function GET(req) {
     return Response.json({ error: "Server error" }, { status: 500 });
   }
 }
+
