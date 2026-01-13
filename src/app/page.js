@@ -13,7 +13,7 @@ export default function HomePage() {
   return (
     <Container maxWidth="lg" sx={{ py: 3 }}>
       {/* ======================
-          QUICK ACTIONS (TOP)
+          QUICK ACTIONS
       ====================== */}
       <Paper elevation={0} sx={{ p: 2, mb: 3 }}>
         <Box
@@ -29,7 +29,7 @@ export default function HomePage() {
             <Typography variant="h6" sx={{ fontWeight: 800 }}>
               Quick Actions
             </Typography>
-            <Typography variant="body2" sx={{ opacity: 0.75 }}>
+            <Typography variant="body2">
               Access key features quickly
             </Typography>
           </Box>
@@ -61,7 +61,8 @@ export default function HomePage() {
             <Button
               component={Link}
               href="/documents"
-              variant="outlined"
+              variant="contained"
+              className="btn-documents"
               sx={{ minWidth: 160 }}
             >
               Documents
@@ -71,7 +72,7 @@ export default function HomePage() {
       </Paper>
 
       {/* ======================
-          MAIN CONTENT 
+          IMAGE SECTION
       ====================== */}
       <Paper elevation={0} sx={{ p: 2.5 }}>
         <Typography variant="h6" sx={{ fontWeight: 800, mb: 2 }}>
