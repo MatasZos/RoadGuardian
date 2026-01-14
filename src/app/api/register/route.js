@@ -3,26 +3,18 @@ import { MongoClient } from "mongodb";
 import bcrypt from "bcryptjs";
 
 export async function POST(req) {
-  const uri = process.env.MONGODB_URI;
-
-  if (!uri) {
-    return NextResponse.json(
-      { message: "Missing MongoDB URI" },
-      { status: 500 }
-    );
-  }
-
   try {
     const { name, email, password, number } = await req.json();
 
+    const uri = process.env.MONGODB_URI;
     const client = new MongoClient(uri);
     await client.connect();
 
-    const db = client.db("login");        
-    const users = db.collection("user");  
+    const db = client.db("login");
+    const users = db.collection("user");
 
-    const existing = await users.findOne({ email });
-    if (existing) {
+    const exists = await users.findOne({ email });
+    if (exists) {
       await client.close();
       return NextResponse.json(
         { message: "User already exists" },
@@ -43,16 +35,12 @@ export async function POST(req) {
 
     await client.close();
 
-    return NextResponse.json(
-      { message: "Registered successfully" },
-      { status: 201 }
-    );
+    return NextResponse.json({ message: "Registered" }, { status: 201 });
   } catch (err) {
     console.error(err);
     return NextResponse.json(
-      { message: "Server error" },
+      { message: "Registration failed" },
       { status: 500 }
     );
   }
 }
-
