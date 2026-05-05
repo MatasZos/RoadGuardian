@@ -4,6 +4,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { cleanStringOrEmpty } from "@/lib/utils";
 
+// ALLOWED_TYPES lists valid issue type strings accepted by the support ticket form
 const ALLOWED_TYPES = [
   "Account Issue",
   "Maintenance Records",
@@ -13,6 +14,7 @@ const ALLOWED_TYPES = [
   "Other",
 ];
 
+// POST creates a new support ticket linked to the signed-in user's account
 export async function POST(req) {
   try {
     const session = await getServerSession(authOptions);

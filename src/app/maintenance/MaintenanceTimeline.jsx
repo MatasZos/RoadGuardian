@@ -1,6 +1,7 @@
 import { Card, Button, Stack } from "react-bootstrap";
 import { formatDisplayDate } from "@/lib/maintenance";
 
+// MaintenanceTimeline component that renders maintenance records grouped by month with edit and delete actions on each entry
 export default function MaintenanceTimeline({ monthSections, onEdit, onDelete }) {
   if (monthSections.length === 0) {
     return (
@@ -10,6 +11,7 @@ export default function MaintenanceTimeline({ monthSections, onEdit, onDelete })
 
   return (
     <div className="rg-timeline">
+      {/* each section is a [month label, records array] tuple produced by the parent's groupByMonth helper */}
       {monthSections.map(([month, items]) => (
         <div key={month} className="mb-4">
           <h2 className="h6 fw-bold text-uppercase text-body-secondary mb-3">
@@ -20,6 +22,7 @@ export default function MaintenanceTimeline({ monthSections, onEdit, onDelete })
             {items.map((r) => (
               <Card key={r._id} className="rg-timeline-card border-0">
                 <Card.Body>
+                  {/* task types shown as a comma-separated string when multiple tasks were done at once */}
                   <h3 className="h6 fw-bold mb-2">
                     {Array.isArray(r.type) ? r.type.join(", ") : r.type}
                   </h3>
@@ -43,6 +46,7 @@ export default function MaintenanceTimeline({ monthSections, onEdit, onDelete })
                     </p>
                   )}
 
+                  {/* advisory box shown only when the mechanic left notes for the next service */}
                   {r.advisories && (
                     <div className="rg-advisory-box small mt-2 p-2 rounded">
                       <strong>Advisories:</strong> {r.advisories}
@@ -72,6 +76,7 @@ export default function MaintenanceTimeline({ monthSections, onEdit, onDelete })
         </div>
       ))}
 
+      {/* custom styles for timeline cards and the amber advisory box */}
       <style jsx>{`
         :global(.rg-timeline-card) {
           background: rgba(0, 0, 0, 0.25) !important;

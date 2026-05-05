@@ -2,10 +2,12 @@ import clientPromise from "@/lib/mongodb";
 import { NextResponse } from "next/server";
 import { cleanEmail } from "@/lib/utils";
 
+// serializeConversation converts the MongoDB _id ObjectId to a string so it can be safely serialised to JSON
 function serializeConversation(doc) {
   return { ...doc, _id: String(doc._id) };
 }
 
+// GET returns all conversations the requesting user is a participant of, sorted by most recent activity first
 export async function GET(req) {
   try {
     const email = cleanEmail(req.headers.get("x-user-email"));
@@ -29,6 +31,7 @@ export async function GET(req) {
   }
 }
 
+// POST finds or creates a conversation between two users, returning the existing document if one already exists
 export async function POST(req) {
   try {
     const body = await req.json();
@@ -55,6 +58,7 @@ export async function POST(req) {
     const db = client.db("login");
     const conversations = db.collection("conversations");
 
+    // return the existing conversation rather than creating a duplicate if one already exists
     let conversation = await conversations.findOne({ participants });
     if (!conversation) {
       const now = new Date();

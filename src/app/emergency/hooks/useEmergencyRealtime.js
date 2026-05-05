@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import { getAblyClient } from "@/lib/ablyClient";
 
-// Subscribes to the two global Ably channels that drive the live map:
-//   - "emergencies:live"  — fires whenever any incident is created/updated
-//   - "riders:live"       — fires whenever a rider's broadcast position moves
-// On either event the page re-fetches the relevant list.
+// useEmergencyRealtime subscribes to the two global Ably channels that drive the live map:
+//"emergencies:live"— fires whenever any incident is created or updated
+//"riders:live"— fires whenever a rider's broadcast position changes
+// On either event the provided callback re-fetches the relevant list
 export function useEmergencyRealtime({ email, onIncidentEvent, onRiderEvent }) {
   useEffect(() => {
     if (!email) return;

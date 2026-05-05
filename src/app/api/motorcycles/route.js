@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 
+// GET proxies a motorcycle search to the API Ninjas motorcycles endpoint using the make, model and year query params, returning the matching results or a descriptive error
 export async function GET(req) {
   const apiKey = process.env.API_NINJAS_KEY;
 
@@ -18,6 +19,7 @@ export async function GET(req) {
   const model = searchParams.get("model") || "";
   const year = searchParams.get("year") || "";
 
+  // at least one of make or model must be provided to avoid returning the entire database
   if (!make && !model) {
     return NextResponse.json(
       { error: "Either make or model is required" },
@@ -41,6 +43,7 @@ export async function GET(req) {
 
     const text = await apiRes.text();
 
+    // safely parse the response body, falling back to the raw text if JSON parsing fails
     let data;
     try {
       data = JSON.parse(text);
@@ -67,6 +70,7 @@ export async function GET(req) {
         error: "Server error",
         message: err?.message || String(err),
         name: err?.name,
+        // only include stack traces in development to avoid leaking internals in production
         stack:
           process.env.NODE_ENV === "development" ? err?.stack : undefined,
       },

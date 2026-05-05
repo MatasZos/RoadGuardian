@@ -6,6 +6,7 @@ import { useSession } from "next-auth/react";
 import Navbar from "../components/Navbar";
 import styles from "./documents.module.css";
 
+// available document types, each with a label and whether they require an expiry date
 const DOCUMENT_TYPES = [
   { label: "Insurance", expires: true },
   { label: "Motor Tax", expires: true },
@@ -15,16 +16,20 @@ const DOCUMENT_TYPES = [
   { label: "Other", expires: false },
 ];
 
+// empty form state used when adding a new document or clearing the form after a successful submission
 const EMPTY_FORM = { title: "", expiryDate: "", notes: "" };
 
+// number of days before expiry at which a document is considered "expiring soon"
 const SOON_THRESHOLD_DAYS = 30;
 
+// parseISODate converts an ISO date string to a Date object, returning null if the value is invalid or empty
 function parseISODate(value) {
   if (!value) return null;
   const d = new Date(`${value}T00:00:00`);
   return Number.isNaN(d.getTime()) ? null : d;
 }
 
+// formatDisplayDate formats an ISO date string into a human-readable format for display in the document cards
 function formatDisplayDate(value) {
   const d = parseISODate(value);
   if (!d) return String(value || "");
@@ -35,6 +40,7 @@ function formatDisplayDate(value) {
   });
 }
 
+// daysUntil returns the number of days until the given expiry date, or null if the date is invalid
 function daysUntil(expiryDateStr) {
   const d = parseISODate(expiryDateStr);
   if (!d) return null;
@@ -44,8 +50,7 @@ function daysUntil(expiryDateStr) {
   return Math.ceil((d.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
 }
 
-// Bucket documents into Expired / Expiring soon / Valid / No expiry, each
-// sorted by soonest expiry (or by most recently created for the no-expiry pile).
+// sort documents into Expired / Expiring soon / Valid / No expiry
 function categorize(docs) {
   const expired = [];
   const expiringSoon = [];
@@ -82,6 +87,7 @@ function categorize(docs) {
   return { expired, expiringSoon, valid, noExpiry };
 }
 
+// DocumentsPage component that lets users add, edit and delete vehicle documents, grouped into expiry categories
 export default function DocumentsPage() {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -92,18 +98,22 @@ export default function DocumentsPage() {
   const [form, setForm] = useState(EMPTY_FORM);
 
   const selectedType = DOCUMENT_TYPES.find((t) => t.label === form.title);
+  // memo the categorized documents to avoid recalculating on every render
   const categorized = useMemo(() => categorize(docs), [docs]);
 
+  // redirect unauthenticated users to the login page
   useEffect(() => {
     if (status === "loading") return;
     if (status === "unauthenticated") router.push("/login");
   }, [status, router]);
 
+  // fetch documents once the user's email is available after authentication
   useEffect(() => {
     if (!email) return;
     fetchDocs();
   }, [email]);
 
+  // fetchDocs retrieves the user's documents from the API and updates the docs state
   async function fetchDocs() {
     const res = await fetch("/api/documents", {
       headers: { "x-user-email": email },
@@ -113,6 +123,7 @@ export default function DocumentsPage() {
     setDocs(Array.isArray(data) ? data : []);
   }
 
+  // handleSubmit creates a new document or updates an existing one depending on whether editingId is set
   async function handleSubmit(e) {
     e.preventDefault();
     if (!email) return;
@@ -133,6 +144,7 @@ export default function DocumentsPage() {
     await fetchDocs();
   }
 
+  // startEdit populates the form with the selected document's data so the user can make changes
   function startEdit(doc) {
     setEditingId(doc._id);
     setForm({
@@ -142,6 +154,7 @@ export default function DocumentsPage() {
     });
   }
 
+  // deleteDoc removes a document by id, updating local state immediately to avoid a full refetch
   async function deleteDoc(id) {
     await fetch("/api/documents", {
       method: "DELETE",
@@ -151,6 +164,7 @@ export default function DocumentsPage() {
     setDocs((prev) => prev.filter((d) => String(d._id) !== String(id)));
   }
 
+  // cancelEdit resets the form and clears the editing state without saving any changes
   function cancelEdit() {
     setEditingId(null);
     setForm(EMPTY_FORM);
@@ -166,6 +180,7 @@ export default function DocumentsPage() {
 
       <div className={styles.page}>
         <div className={styles.container}>
+          {/* page header with title and description */}
           <div className={styles.hero}>
             <h1 className={styles.title}>Your Documents</h1>
             <p className={styles.heroText}>
@@ -174,6 +189,7 @@ export default function DocumentsPage() {
             </p>
           </div>
 
+          {/* form for adding or editing a document */}
           <form onSubmit={handleSubmit} className={styles.form}>
             <div className={styles.formHeader}>
               <h2 className={styles.formTitle}>
@@ -184,6 +200,7 @@ export default function DocumentsPage() {
               </p>
             </div>
 
+            // document type dropdown — drives whether the expiry date field is shown below
             <select
               className={styles.input}
               value={form.title}
@@ -200,6 +217,7 @@ export default function DocumentsPage() {
               ))}
             </select>
 
+            // expiry date input — only rendered for document types that require an expiry date
             {selectedType?.expires && (
               <input
                 className={styles.input}
@@ -212,6 +230,7 @@ export default function DocumentsPage() {
               />
             )}
 
+            // notes textarea — shows a custom placeholder for "Other" document types to prompt a description
             <textarea
               className={styles.textarea}
               placeholder={
@@ -228,6 +247,7 @@ export default function DocumentsPage() {
                 {editingId ? "Save Changes" : "Add Document"}
               </button>
 
+              // cancel button only appears when editing an existing document
               {editingId && (
                 <button
                   type="button"
@@ -240,6 +260,7 @@ export default function DocumentsPage() {
             </div>
           </form>
 
+          {/* categorized document sections — expired, expiring soon, valid and no-expiry */}
           <div className={styles.sectionsGrid}>
             <Section
               title="Expired"
@@ -291,6 +312,7 @@ export default function DocumentsPage() {
   );
 }
 
+// Section component that renders a titled group of document cards with a count badge
 function Section({
   title,
   subtitle,
@@ -308,9 +330,11 @@ function Section({
           <h2 className={`${styles.sectionTitle} ${accentClass}`}>{title}</h2>
           {subtitle && <p className={styles.sectionSubtitle}>{subtitle}</p>}
         </div>
+        // badge showing the total count of documents in this section
         <div className={`${styles.badge} ${badgeClass}`}>{items.length}</div>
       </div>
 
+      // show a "None" placeholder when there are no documents in this category, otherwise list the document cards
       {items.length === 0 ? (
         <p className={styles.emptyText}>None</p>
       ) : (
@@ -330,6 +354,7 @@ function Section({
   );
 }
 
+// DocumentCard component that displays a single document with its expiry status, notes, and edit/delete actions
 function DocumentCard({ doc, cardClass, onEdit, onDelete }) {
   const dLeft = doc.expiryDate ? daysUntil(doc.expiryDate) : null;
 
@@ -337,6 +362,7 @@ function DocumentCard({ doc, cardClass, onEdit, onDelete }) {
     <div className={`${styles.card} ${cardClass}`}>
       <h3 className={styles.cardTitle}>{doc.title}</h3>
 
+      // show days remaining or days overdue if expiry date exists, otherwise indicate no expiry is required
       {doc.expiryDate ? (
         <p className={styles.cardText}>
           <strong>Expires:</strong> {formatDisplayDate(doc.expiryDate)}
@@ -356,6 +382,7 @@ function DocumentCard({ doc, cardClass, onEdit, onDelete }) {
 
       {doc.notes && <p className={styles.cardNotes}>{doc.notes}</p>}
 
+      // edit and delete buttons for managing this document
       <div className={styles.cardActions}>
         <button className={styles.editBtn} onClick={() => onEdit(doc)}>
           Edit

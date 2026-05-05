@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { ObjectId } from "mongodb";
 import { cleanString, cleanEmail } from "@/lib/utils";
 
+// GET returns all notifications for the requesting user, sorted by most recent first
 export async function GET(req) {
   try {
     const email = cleanEmail(req.headers.get("x-user-email"));
@@ -24,6 +25,7 @@ export async function GET(req) {
   }
 }
 
+// PATCH handles three notification actions: markAllRead, markRead (single), and clearAll — keyed by the action field in the request body
 export async function PATCH(req) {
   try {
     const body = await req.json();
@@ -38,6 +40,7 @@ export async function PATCH(req) {
     const client = await clientPromise;
     const notifications = client.db("login").collection("notifications");
 
+    // markAllRead sets every unread notification for the user to read in a single bulk operation
     if (action === "markAllRead") {
       await notifications.updateMany(
         { userEmail: email, read: false },
@@ -46,6 +49,7 @@ export async function PATCH(req) {
       return NextResponse.json({ success: true });
     }
 
+    // markRead sets a single notification to read, identified by its id
     if (action === "markRead" && id && ObjectId.isValid(id)) {
       await notifications.updateOne(
         { _id: new ObjectId(id), userEmail: email },
@@ -54,6 +58,7 @@ export async function PATCH(req) {
       return NextResponse.json({ success: true });
     }
 
+    // clearAll permanently deletes all of the user's notifications
     if (action === "clearAll") {
       await notifications.deleteMany({ userEmail: email });
       return NextResponse.json({ success: true });

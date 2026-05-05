@@ -1,5 +1,6 @@
 import { Form, Button, Row, Col, ListGroup, Card, Spinner } from "react-bootstrap";
 
+// BikeSelector component that lets users search for a motorbike by make, model, and year and pick one from the results list
 export default function BikeSelector({
   selectedBike,
   bikeSearch,
@@ -11,6 +12,7 @@ export default function BikeSelector({
 }) {
   return (
     <div>
+      {/* currently selected bike display */}
       <Card className="rg-selected-bike border-0 mb-3">
         <Card.Body className="py-3">
           <div className="text-uppercase small text-body-secondary fw-semibold">
@@ -26,6 +28,7 @@ export default function BikeSelector({
         </Card.Body>
       </Card>
 
+      {/* search inputs for make, model, year and the trigger button */}
       <Row className="g-2">
         <Col xs={12} md={4}>
           <Form.Control
@@ -79,6 +82,7 @@ export default function BikeSelector({
         </Col>
       </Row>
 
+      {/* results list — capped at 8 to avoid an overwhelming dropdown */}
       {bikeResults.length > 0 && (
         <ListGroup className="rg-bike-results mt-3">
           {bikeResults.slice(0, 8).map((bike, idx) => (
@@ -102,6 +106,7 @@ export default function BikeSelector({
         </ListGroup>
       )}
 
+      {/* custom styles for the selected bike card and result list items */}
       <style jsx>{`
         :global(.rg-selected-bike) {
           background: rgba(0, 0, 0, 0.25) !important;

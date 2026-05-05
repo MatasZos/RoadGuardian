@@ -4,10 +4,12 @@ import { ObjectId } from "mongodb";
 import { getAblyRest } from "@/lib/ablyServer";
 import { cleanString, cleanEmail } from "@/lib/utils";
 
+// serializeMessage converts the MongoDB _id ObjectId to a string for safe JSON serialisation
 function serializeMessage(doc) {
   return { ...doc, _id: String(doc._id) };
 }
 
+// GET returns all messages in a conversation, verifying the requesting user is a participant before returning any data
 export async function GET(req) {
   try {
     const email = cleanEmail(req.headers.get("x-user-email"));
@@ -24,6 +26,7 @@ export async function GET(req) {
     const client = await clientPromise;
     const db = client.db("login");
 
+    // confirm the user is a participant before returning the messages to prevent unauthorised reads
     const conversation = await db.collection("conversations").findOne({
       _id: new ObjectId(conversationId),
       participants: email,
@@ -45,6 +48,7 @@ export async function GET(req) {
   }
 }
 
+// POST sends a new message in a conversation, updates the conversation's lastMessage preview, creates a notification for the receiver, and publishes an Ably event so the chat panel updates in real time
 export async function POST(req) {
   try {
     const body = await req.json();
@@ -64,6 +68,7 @@ export async function POST(req) {
     const client = await clientPromise;
     const db = client.db("login");
 
+    // confirm both users are participants of the conversation before allowing the message to be sent
     const conversation = await db.collection("conversations").findOne({
       _id: new ObjectId(conversationId),
       participants: { $all: [senderEmail, receiverEmail] },
@@ -84,11 +89,13 @@ export async function POST(req) {
 
     const result = await db.collection("messages").insertOne(messageDoc);
 
+    // update the conversation's lastMessage field so the sidebar shows a preview of the latest message
     await db.collection("conversations").updateOne(
       { _id: new ObjectId(conversationId) },
       { $set: { lastMessage: text, updatedAt: now } }
     );
 
+    // build and insert an in-app notification for the receiver with a truncated message preview
     const preview = text.length > 60 ? `${text.slice(0, 60)}...` : text;
     const notificationDoc = {
       userEmail: receiverEmail,
@@ -104,6 +111,7 @@ export async function POST(req) {
 
     const notificationResult = await db.collection("notifications").insertOne(notificationDoc);
 
+    // publish to the receiver's Ably channel so their notification bell updates without a page reload
     try {
       const ably = getAblyRest();
       await ably.channels.get(`user:${receiverEmail}`).publish("notification-created", {

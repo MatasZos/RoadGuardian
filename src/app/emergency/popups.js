@@ -1,17 +1,18 @@
 // HTML strings injected into Mapbox popups.
 //
-// We can't use React/Bootstrap inside a popup — Mapbox renders the popup as
-// its own DOM tree, separate from React's tree. So we hand it a plain HTML
-// string and let the marker effect bind click handlers afterwards via the
-// CSS classes embedded here.
+// React and Bootstrap cannot be used inside a Mapbox popup — it renders inside
+// its own DOM tree, separate from React's tree. Plain HTML strings are passed
+// instead and click handlers are bound after the popup mounts via CSS class selectors.
 
 import { STATUS_LABELS } from "./constants";
 import { prettify, formatTime, popupBtnStyle } from "./utils";
 
+// buttonsForViewer returns the action button HTML for an incident popup based on the viewer's role
 function buttonsForViewer({ id, incident, viewerEmail }) {
   const isMine = incident.userEmail === viewerEmail;
   const isHelper = incident.helperUserEmail === viewerEmail;
 
+  // reporter sees cancel and resolve only
   if (isMine) {
     return `
       <button class="cancel-incident-btn"  data-id="${id}" style="${popupBtnStyle("#dc2626")}">Cancel request</button>
@@ -19,6 +20,7 @@ function buttonsForViewer({ id, incident, viewerEmail }) {
     `;
   }
 
+  // bystanders see offer-help, route, and message; the assigned helper also gets on-the-way and arrived
   let html = `
     <button class="claim-help-btn"     data-id="${id}" style="${popupBtnStyle("#16a34a")}">Offer help</button>
     <button class="route-incident-btn" data-id="${id}" data-lng="${incident.lng}" data-lat="${incident.lat}" style="${popupBtnStyle("#2563eb")}">Route there</button>
@@ -36,6 +38,7 @@ function buttonsForViewer({ id, incident, viewerEmail }) {
   return html;
 }
 
+// buildIncidentPopupHTML returns the full HTML string for an incident marker popup, including all detail fields and action buttons
 export function buildIncidentPopupHTML({ incident, viewerEmail, distanceKm }) {
   const id = String(incident._id);
   const reportLine =
@@ -69,6 +72,7 @@ export function buildIncidentPopupHTML({ incident, viewerEmail, distanceKm }) {
   `;
 }
 
+// buildRiderPopupHTML returns the HTML string for a nearby rider marker popup with route and message buttons
 export function buildRiderPopupHTML({ rider, distanceKm }) {
   const id = String(rider._id);
   return `

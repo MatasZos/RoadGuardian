@@ -3,11 +3,13 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { cleanString } from "@/lib/utils";
 
+// system prompt that scopes the AI to motorbike riding in Ireland and instructs it to keep answers short and practical
 const SYSTEM_PROMPT = `You are RoadGuardian's assistant for motorbike riders in Ireland.
 Keep replies short, clear, and practical.
 Help with maintenance questions, road safety, basic troubleshooting, and emergency guidance.
 If something is a real emergency, tell the user to call 112 or 999.`;
 
+// POST forwards the user's message to the OpenRouter AI API and returns the assistant's reply text
 export async function POST(req) {
   try {
     const session = await getServerSession(authOptions);
@@ -29,6 +31,7 @@ export async function POST(req) {
       );
     }
 
+    // fall back to a free model if no specific model is configured in the environment
     const model = process.env.OPENROUTER_MODEL || "openrouter/free";
 
     const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
@@ -50,6 +53,7 @@ export async function POST(req) {
 
     const data = await res.json();
 
+    // surface a readable error message from the OpenRouter response body when available
     if (!res.ok) {
       console.error("OpenRouter error:", res.status, data);
       const errMsg =

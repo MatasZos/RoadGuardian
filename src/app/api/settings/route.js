@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 
+// default settings applied when a user has no saved preferences in the database
 const DEFAULT_SETTINGS = {
   emailReminders: true,
   documentReminders: true,
@@ -11,6 +12,7 @@ const DEFAULT_SETTINGS = {
   compactMode: false,
 };
 
+// GET returns the signed-in user's saved settings, merged over the defaults so any new keys always have a fallback value
 export async function GET() {
   try {
     const session = await getServerSession(authOptions);
@@ -31,6 +33,7 @@ export async function GET() {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
+    // merge saved settings over defaults so any newly added keys have a value
     const settings = { ...DEFAULT_SETTINGS, ...(user.settings || {}) };
 
     return NextResponse.json({ settings });
@@ -40,6 +43,7 @@ export async function GET() {
   }
 }
 
+// PUT updates the signed-in user's settings, stripping unknown keys to only persist the allowed boolean preferences
 export async function PUT(req) {
   try {
     const session = await getServerSession(authOptions);
@@ -51,6 +55,7 @@ export async function PUT(req) {
     const email = session.user.email.toLowerCase();
     const body = await req.json();
 
+    // coerce each field to a boolean to prevent any unexpected values being stored
     const safe = {
       emailReminders: !!body.emailReminders,
       documentReminders: !!body.documentReminders,

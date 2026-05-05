@@ -2,6 +2,7 @@ import clientPromise from "@/lib/mongodb";
 import { NextResponse } from "next/server";
 import { cleanEmail } from "@/lib/utils";
 
+// GET returns profile fields (fullName, email, phone, motorbike) for the user identified by the x-user-email header
 export async function GET(req) {
   const email = cleanEmail(req.headers.get("x-user-email"));
 

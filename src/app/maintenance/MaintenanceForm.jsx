@@ -1,6 +1,7 @@
 import { Form, Button, Row, Col } from "react-bootstrap";
 import { MAINTENANCE_TASKS } from "@/lib/maintenance";
 
+// MaintenanceForm component that lets users select tasks, enter a service date and odometer reading, add notes and advisories, and submit or update a maintenance record
 export default function MaintenanceForm({
   form,
   setForm,
@@ -11,6 +12,7 @@ export default function MaintenanceForm({
 }) {
   return (
     <Form onSubmit={onSubmit}>
+      {/* task checkboxes — each maps to a standard maintenance type from MAINTENANCE_TASKS */}
       <Form.Label className="fw-semibold">Select Tasks Done:</Form.Label>
       <div className="rg-task-checks d-flex flex-wrap gap-3 mb-3">
         {MAINTENANCE_TASKS.map((task) => (
@@ -26,6 +28,7 @@ export default function MaintenanceForm({
       </div>
 
       <Row className="g-3">
+        {/* read-only summary of the selected tasks shown as a comma-separated string */}
         <Col xs={12}>
           <Form.Control
             as="textarea"
@@ -78,6 +81,7 @@ export default function MaintenanceForm({
         </Col>
       </Row>
 
+      {/* due preview — shows the next service km for each selected task based on the entered odometer */}
       {previewList.length > 0 && (
         <div className="rg-preview-box mt-3 p-3 rounded">
           <h3 className="h6 fw-bold mb-2">Task Due Preview</h3>
@@ -98,6 +102,7 @@ export default function MaintenanceForm({
         </Button>
       </div>
 
+      {/* custom styles for the preview box */}
       <style jsx>{`
         :global(.rg-preview-box) {
           background: rgba(34, 197, 94, 0.1);

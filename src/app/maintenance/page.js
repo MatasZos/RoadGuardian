@@ -17,6 +17,7 @@ import StatusBoard from "./StatusBoard";
 import MaintenanceForm from "./MaintenanceForm";
 import MaintenanceTimeline from "./MaintenanceTimeline";
 
+// empty form state used when adding a new record or resetting the form after a submission
 const EMPTY_FORM = {
   type: [],
   date: "",
@@ -25,6 +26,7 @@ const EMPTY_FORM = {
   advisories: "",
 };
 
+// MaintenancePage component that lets users search for a bike, log service records, and view their maintenance history
 export default function MaintenancePage() {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -39,18 +41,22 @@ export default function MaintenancePage() {
   const [bikeResults, setBikeResults] = useState([]);
   const [bikeLoading, setBikeLoading] = useState(false);
 
+  // memoize the timeline grouped by month so it only recalculates when records change
   const monthSections = useMemo(
     () => Object.entries(groupByMonth(records)),
     [records]
   );
 
+  // memoize the task preview list based on the selected types and current mileage
   const previewList = useMemo(
     () => getPreviewFromForm(form.type, form.km),
     [form.type, form.km]
   );
 
+  // memoize the per-bike task summaries used by the status board
   const bikeSummaries = useMemo(() => buildBikeTaskSummary(records), [records]);
 
+  // memoize the summary for the currently selected bike so the status board updates reactively
   const selectedBikeSummary = useMemo(
     () =>
       selectedBike
@@ -59,6 +65,7 @@ export default function MaintenancePage() {
     [bikeSummaries, selectedBike]
   );
 
+  // redirect unauthenticated users to the login page
   useEffect(() => {
     if (status === "unauthenticated") router.push("/login");
   }, [status, router]);
@@ -72,10 +79,12 @@ export default function MaintenancePage() {
     }));
   }, []);
 
+  // fetch maintenance records once the user's email is available after authentication
   useEffect(() => {
     fetchRecords();
   }, [email]);
 
+  // fetchRecords retrieves all maintenance records for the current user from the API
   async function fetchRecords() {
     if (!email) return;
 
@@ -88,6 +97,7 @@ export default function MaintenancePage() {
     setRecords(Array.isArray(data) ? data : []);
   }
 
+  // handleBikeSearch queries the motorcycle API using the make, model and year inputs and populates the results list
   async function handleBikeSearch() {
     setBikeResults([]);
 
@@ -119,6 +129,7 @@ export default function MaintenancePage() {
     }
   }
 
+  // pickBike sets the selected bike label in state and persists it to localStorage for the next visit
   function pickBike(bike) {
     const label = `${bike.make} ${String(bike.model).trim()} (${bike.year})`;
     setSelectedBike(label);
@@ -126,6 +137,7 @@ export default function MaintenancePage() {
     setBikeResults([]);
   }
 
+  // toggleTask adds or removes a maintenance task type from the form's type array
   function toggleTask(task) {
     setForm((prev) => ({
       ...prev,
@@ -135,6 +147,7 @@ export default function MaintenancePage() {
     }));
   }
 
+  // handleSubmit creates a new maintenance record or updates an existing one depending on whether editingId is set
   async function handleSubmit(e) {
     e.preventDefault();
     if (!email) return;
@@ -159,6 +172,7 @@ export default function MaintenancePage() {
     await fetchRecords();
   }
 
+  // startEdit populates the form with an existing record's data so the user can make changes
   function startEdit(record) {
     setEditingId(record._id);
     setSelectedBike(record.motorbike || "");
@@ -171,6 +185,7 @@ export default function MaintenancePage() {
     });
   }
 
+  // deleteRecord removes a record by id, updating local state immediately to avoid a full refetch
   async function deleteRecord(id) {
     await fetch("/api/maintenance", {
       method: "DELETE",
@@ -180,6 +195,7 @@ export default function MaintenancePage() {
     setRecords((prev) => prev.filter((r) => r._id !== id));
   }
 
+  // show a spinner while the session is being resolved
   if (status === "loading") {
     return (
       <div className="rg-maintenance-page d-flex align-items-center justify-content-center min-vh-100">
@@ -194,6 +210,7 @@ export default function MaintenancePage() {
 
       <Container fluid="xxl" className="py-4">
         <Stack gap={3}>
+          {/* page header with title and description */}
           <div>
             <h1 className="rg-page-title fw-bold mb-1 text-primary">
               <i className="bi bi-tools me-2"></i>
@@ -206,6 +223,7 @@ export default function MaintenancePage() {
           </div>
 
           <Row className="g-3">
+            {/* status board on the left showing the summary for the selected bike */}
             <Col xs={12} lg={4}>
               <StatusBoard
                 summary={selectedBikeSummary}
@@ -215,6 +233,7 @@ export default function MaintenancePage() {
 
             <Col xs={12} lg={8}>
               <Stack gap={3}>
+                {/* bike search card — must be filled before adding or editing records */}
                 <Card className="rg-section-card border-0">
                   <Card.Body>
                     <div className="mb-3">
@@ -237,6 +256,7 @@ export default function MaintenancePage() {
                   </Card.Body>
                 </Card>
 
+                {/* form card for adding a new record or editing an existing one */}
                 <Card className="rg-section-card border-0">
                   <Card.Body>
                     <div className="mb-3">
@@ -262,6 +282,7 @@ export default function MaintenancePage() {
                   </Card.Body>
                 </Card>
 
+                {/* service timeline card showing all maintenance records grouped by month */}
                 <Card className="rg-section-card border-0">
                   <Card.Body>
                     <div className="mb-3">
@@ -286,6 +307,7 @@ export default function MaintenancePage() {
         </Stack>
       </Container>
 
+      // custom styles for the maintenance page, including the background gradient, card styles and form field overrides
       <style>{`
         .rg-maintenance-page {
           background:

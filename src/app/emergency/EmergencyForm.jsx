@@ -2,6 +2,7 @@ import { Card, Form, Button, Row, Col, Spinner } from "react-bootstrap";
 import { INCIDENT_TYPES, SEVERITIES } from "./constants";
 import { prettify } from "./utils";
 
+// EmergencyForm component that collects incident type, severity, description, contact details, and injury status before submitting a new emergency report
 export default function EmergencyForm({
   form,
   setForm,
@@ -9,6 +10,7 @@ export default function EmergencyForm({
   onSubmit,
   onClose,
 }) {
+  // update a single form field while keeping the rest of the form state intact
   const update = (field, value) =>
     setForm((prev) => ({ ...prev, [field]: value }));
 
@@ -21,7 +23,7 @@ export default function EmergencyForm({
         </h2>
 
         <Row className="g-3">
-          {/* Self vs third-party report */}
+          {/* self vs third-party report toggle — changes whether the rider name field is shown */}
           <Col xs={12} md={6}>
             <Form.Group controlId="emergencyReportMode">
               <Form.Label className="small fw-semibold text-body-secondary">
@@ -37,6 +39,7 @@ export default function EmergencyForm({
             </Form.Group>
           </Col>
 
+          {/* name of the person being reported — only shown when third-party mode is selected */}
           {form.reportMode === "third_party" && (
             <Col xs={12} md={6}>
               <Form.Group controlId="emergencyReportedForName">
@@ -104,7 +107,7 @@ export default function EmergencyForm({
             </Form.Group>
           </Col>
 
-          {/* Phone is shown to whoever claims the emergency. */}
+          {/* phone number shown to whoever claims the emergency so they can call the rider */}
           <Col xs={12} md={6}>
             <Form.Group controlId="emergencyPhone">
               <Form.Label className="small fw-semibold text-body-secondary">
@@ -119,6 +122,7 @@ export default function EmergencyForm({
             </Form.Group>
           </Col>
 
+          {/* injury and rideability toggles — surface key info to the helper immediately */}
           <Col xs={12} md={6}>
             <div className="d-flex flex-column gap-2 h-100 justify-content-center pt-md-3">
               <Form.Check

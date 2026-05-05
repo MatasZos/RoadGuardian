@@ -5,6 +5,7 @@ import { getAblyRest } from "@/lib/ablyServer";
 import { cleanStringOrEmpty } from "@/lib/utils";
 import { buildBikeTaskSummary } from "@/lib/maintenance";
 
+// syncMaintenanceNotifications recalculates which maintenance tasks are overdue or due soon for the given user, then upserts or removes notifications accordingly and pushes Ably events so the bell icon stays accurate
 async function syncMaintenanceNotifications(db, userEmail) {
   const notifications = db.collection("notifications");
   const records = await db
@@ -20,6 +21,7 @@ async function syncMaintenanceNotifications(db, userEmail) {
 
       let title = "";
       let text = "";
+      // classify the notification as overdue or due soon based on remaining kilometres
       if (task.remainingKm < 0) {
         title = "Maintenance overdue";
         text = `${task.type} on ${bike.bike} is overdue. Get checked immediately.`;
@@ -63,6 +65,7 @@ async function syncMaintenanceNotifications(db, userEmail) {
       sourceId: notif.sourceId,
     });
 
+    // insert new notifications and publish a creation event so the bell lights up immediately
     if (!existing) {
       const result = await notifications.insertOne(notif);
       try {
@@ -76,6 +79,7 @@ async function syncMaintenanceNotifications(db, userEmail) {
       continue;
     }
 
+    // only update existing notifications if the content has changed, to avoid unnecessary writes
     const changed =
       existing.title !== notif.title ||
       existing.text !== notif.text ||
@@ -111,6 +115,7 @@ async function syncMaintenanceNotifications(db, userEmail) {
   }
 }
 
+// buildMaintenanceDoc sanitises and shapes the request body into the fields stored on a maintenance record
 function buildMaintenanceDoc(body) {
   return {
     motorbike: cleanStringOrEmpty(body.motorbike),
@@ -124,6 +129,7 @@ function buildMaintenanceDoc(body) {
   };
 }
 
+// GET returns all maintenance records for the requesting user and syncs their maintenance notifications before responding
 export async function GET(req) {
   try {
     const email = req.headers.get("x-user-email");
@@ -133,6 +139,7 @@ export async function GET(req) {
     const client = await clientPromise;
     const db = client.db("login");
 
+    // sync notifications on every GET so the bell count is accurate when the page loads
     await syncMaintenanceNotifications(db, userEmail);
 
     const records = await db
@@ -148,6 +155,7 @@ export async function GET(req) {
   }
 }
 
+// POST inserts a new maintenance record and resyncs the user's maintenance notifications
 export async function POST(req) {
   try {
     const body = await req.json();
@@ -172,6 +180,7 @@ export async function POST(req) {
   }
 }
 
+// PUT updates an existing maintenance record by id and resyncs the user's maintenance notifications
 export async function PUT(req) {
   try {
     const body = await req.json();
@@ -193,12 +202,14 @@ export async function PUT(req) {
   }
 }
 
+// DELETE removes a maintenance record and resyncs notifications so any cleared tasks are removed from the bell
 export async function DELETE(req) {
   try {
     const body = await req.json();
     const client = await clientPromise;
     const db = client.db("login");
 
+    // read the record before deleting to get the userEmail needed for the notification sync
     const existing = await db.collection("maintenance").findOne({
       _id: new ObjectId(body._id),
     });

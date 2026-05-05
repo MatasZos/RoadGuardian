@@ -11,6 +11,7 @@ import {
   Spinner,
 } from "react-bootstrap";
 
+// LoginPage component that authenticates users via email and password using the NextAuth credentials provider
 export default function LoginPage() {
   const router = useRouter();
 
@@ -21,6 +22,7 @@ export default function LoginPage() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  //handleLogin submits the credentials to NextAuth and redirects to the home page on a successful response
   async function handleLogin(e) {
     e.preventDefault();
     setMessage("");
@@ -44,6 +46,7 @@ export default function LoginPage() {
     }
   }
 
+  //clearMessage resets the alert message when the user starts editing the form fields again
   function clearMessage() {
     if (message) setMessage("");
   }
@@ -51,6 +54,7 @@ export default function LoginPage() {
   return (
     <div className="rg-auth-page">
       <div className="rg-glass-card">
+        {/* logo centred at the top of the login card */}
         <div className="text-center mb-3">
           <img
             src="/logo.png"
@@ -59,6 +63,7 @@ export default function LoginPage() {
           />
         </div>
 
+        {/* heading and subtitle shown above the login form */}
         <div className="text-center mb-4">
           <h1 className="rg-auth-title text-white mb-2">Welcome back</h1>
           <p className="text-body-secondary mb-0">
@@ -66,6 +71,7 @@ export default function LoginPage() {
           </p>
         </div>
 
+        {/* email and password form that calls handleLogin on submit */}
         <Form onSubmit={handleLogin}>
           <Form.Group className="mb-3" controlId="loginEmail">
             <Form.Label className="fw-semibold text-body-secondary small">
@@ -89,6 +95,7 @@ export default function LoginPage() {
             <Form.Label className="fw-semibold text-body-secondary small">
               Password
             </Form.Label>
+            // password field with a toggle button to show or hide the entered password
             <InputGroup size="lg">
               <Form.Control
                 type={showPassword ? "text" : "password"}
@@ -115,6 +122,7 @@ export default function LoginPage() {
             </InputGroup>
           </Form.Group>
 
+          // login button shows a spinner while the authentication request is in progress
           <Button
             type="submit"
             variant="primary"
@@ -135,6 +143,7 @@ export default function LoginPage() {
           </Button>
         </Form>
 
+        // feedback alert shown below the button after a login attempt, styled green for success or red for failure
         {message && (
           <Alert
             variant={isSuccess ? "success" : "danger"}
@@ -151,6 +160,7 @@ export default function LoginPage() {
           </Alert>
         )}
 
+        // link to the register page for users who do not yet have an account
         <div className="text-center mt-4">
           <span className="text-body-secondary small">
             Don't have an account?{" "}

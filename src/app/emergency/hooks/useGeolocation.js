@@ -1,20 +1,20 @@
 import { useEffect, useRef, useState } from "react";
 
+// HIGH_ACCURACY_OPTS requests the most precise fix available with a 10-second timeout and no cached position
 const HIGH_ACCURACY_OPTS = {
   enableHighAccuracy: true,
   timeout: 10000,
   maximumAge: 0,
 };
 
-// Subscribes to the browser's geolocation watch and surfaces the latest
-// coords as React state. The `onPosition` callback fires on every fix and is
-// stored in a ref so the watch doesn't have to re-register every time the
-// callback closure changes.
+// useGeolocation subscribes to the browser's geolocation watch and surfaces the latest coords as React state.
+// The onPosition callback is stored in a ref so the watch doesn't need to re-register on every render.
 export function useGeolocation({ email, onPosition }) {
   const [coords, setCoords] = useState(null);
   const watchIdRef = useRef(null);
   const onPositionRef = useRef(onPosition);
 
+  // keep the ref current without re-triggering the watch effect
   useEffect(() => {
     onPositionRef.current = onPosition;
   });
@@ -43,9 +43,8 @@ export function useGeolocation({ email, onPosition }) {
   return { coords, setCoords };
 }
 
-// One-shot reading of the current position. Used when the user fires off an
-// action that needs coords *now* (e.g. submitting a new emergency before the
-// watcher has produced its first fix).
+// getLiveCoords does a one-shot position read — used when an action needs coords immediately
+// before the continuous watcher has produced its first fix
 export function getLiveCoords() {
   return new Promise((resolve, reject) => {
     if (!("geolocation" in navigator)) {

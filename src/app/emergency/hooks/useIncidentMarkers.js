@@ -3,8 +3,7 @@ import mapboxgl from "mapbox-gl";
 import { haversineKm, markerColorForIncident } from "../utils";
 import { buildIncidentPopupHTML } from "../popups";
 
-// For each active incident, drop a Mapbox marker (or move it if it already
-// exists), and wire up the action buttons embedded in its popup.
+// useIncidentMarkers places or moves a Mapbox marker for each active incident and wires up the action buttons inside each popup
 export function useIncidentMarkers({
   mapRef,
   markersRef,
@@ -39,6 +38,7 @@ export function useIncidentMarkers({
         distanceKm,
       });
 
+      // if the marker already exists just move it — avoids recreating DOM and re-binding handlers
       if (markersRef.current[id]) {
         markersRef.current[id].setLngLat([incident.lng, incident.lat]);
         return;
@@ -46,13 +46,14 @@ export function useIncidentMarkers({
 
       const popup = new mapboxgl.Popup().setHTML(popupHtml);
       const marker = new mapboxgl.Marker({
+        // own incidents use orange so the reporter can instantly spot their pin
         color: isMine ? "#f97316" : markerColorForIncident(incident.status),
       })
         .setLngLat([incident.lng, incident.lat])
         .setPopup(popup)
         .addTo(mapRef.current);
 
-      // Bind handlers after the popup actually mounts to the DOM.
+      // bind popup button handlers after it mounts — setTimeout(0) defers until the HTML is in the DOM
       popup.on("open", () =>
         setTimeout(() => {
           const el = popup.getElement();
@@ -88,7 +89,7 @@ export function useIncidentMarkers({
       markersRef.current[id] = marker;
     });
 
-    // Garbage-collect markers for incidents no longer in state.
+    // remove markers for incidents that are no longer in the active list
     Object.keys(markersRef.current).forEach((id) => {
       if (!seenIds.has(id)) {
         markersRef.current[id].remove();

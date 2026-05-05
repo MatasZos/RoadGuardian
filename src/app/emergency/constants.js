@@ -1,3 +1,4 @@
+// INCIDENT_TYPES lists every category of emergency a rider can report
 export const INCIDENT_TYPES = [
   "breakdown",
   "crash",
@@ -8,9 +9,10 @@ export const INCIDENT_TYPES = [
   "other",
 ];
 
+// SEVERITIES lists the urgency levels available when creating an emergency
 export const SEVERITIES = ["low", "medium", "high", "critical"];
 
-// Server stores statuses as snake_case; the UI shows these labels instead.
+// STATUS_LABELS maps the server's snake_case status strings to human-readable UI labels
 export const STATUS_LABELS = {
   reported: "Reported",
   dispatching: "Dispatching",
@@ -21,6 +23,7 @@ export const STATUS_LABELS = {
   cancelled: "Cancelled",
 };
 
+// QUICK_REPLIES provides one-tap message shortcuts so riders can respond fast in an emergency
 export const QUICK_REPLIES = [
   "I'm nearby.",
   "Are you safe?",

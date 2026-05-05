@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { cleanString, cleanEmail } from "@/lib/utils";
 
+// POST updates one or more profile fields (fullName, motorbike, phone, password) for the user identified by email in the body
 export async function POST(req) {
   try {
     const body = await req.json();
@@ -17,6 +18,7 @@ export async function POST(req) {
       return NextResponse.json({ error: "Missing email" }, { status: 400 });
     }
 
+    // only include fields that were actually provided in the request
     const updateDoc = {};
 
     if (fullName) {
@@ -39,6 +41,7 @@ export async function POST(req) {
         );
       }
 
+      // hash the new password before storing it
       updateDoc.passwordHash = await bcrypt.hash(password, 10);
     }
 

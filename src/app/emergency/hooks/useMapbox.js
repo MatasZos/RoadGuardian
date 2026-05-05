@@ -1,11 +1,12 @@
-// Boots up the Mapbox instance for the emergency page and hands back the
-// refs the page needs to drop markers / draw routes on top of it.
+// useMapbox boots up the Mapbox GL instance for the emergency page and returns the refs the page needs to drop markers and draw routes
 
 import { useEffect, useRef } from "react";
 import mapboxgl from "mapbox-gl";
 
+// DUBLIN_CENTER is the initial map centre - the apps main scope is Ireland currently
 const DUBLIN_CENTER = [-6.2603, 53.3498];
 
+// useMapbox initialises the Mapbox map, wires up follow-mode tracking, and cleans up all markers and layers on unmount
 export function useMapbox({ status, chatOpen, setError, setFollowMode }) {
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
@@ -24,6 +25,7 @@ export function useMapbox({ status, chatOpen, setError, setFollowMode }) {
       return;
     }
 
+    // destroy any previous map instance before creating a new one (e.g. after auth state change)
     if (mapRef.current) {
       mapRef.current.remove();
       mapRef.current = null;
@@ -39,7 +41,7 @@ export function useMapbox({ status, chatOpen, setError, setFollowMode }) {
     map.addControl(new mapboxgl.NavigationControl(), "top-right");
     map.on("load", () => map.resize());
 
-    // Once the user drags manually, stop chasing them with the camera.
+    // once the user drags the map manually, stop chasing them with the camera
     map.on("dragstart", () => {
       followModeRef.current = false;
       setFollowMode(false);
@@ -47,7 +49,7 @@ export function useMapbox({ status, chatOpen, setError, setFollowMode }) {
 
     mapRef.current = map;
 
-    // First tile load can leave the canvas at the wrong size on slow connections.
+    // first tile load can leave the canvas at the wrong size on slow connections
     const resizeTimer = setTimeout(() => map.resize(), 300);
 
     return () => {
@@ -67,8 +69,7 @@ export function useMapbox({ status, chatOpen, setError, setFollowMode }) {
     };
   }, [status]);
 
-  // Chat sidebar is an offcanvas — when it slides in/out the map's container
-  // width changes, so we nudge Mapbox to redraw at the new size.
+  // when the chat sidebar slides in or out the map container changes width — nudge Mapbox to redraw at the new size
   useEffect(() => {
     if (!mapRef.current) return;
     const t = setTimeout(() => mapRef.current?.resize(), 250);

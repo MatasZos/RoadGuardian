@@ -4,6 +4,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { getAblyRest } from "@/lib/ablyServer";
 
+// statuses considered "active" — used to prevent duplicate self-reported emergencies
 const ACTIVE_STATUSES = [
   "reported",
   "dispatching",
@@ -12,7 +13,7 @@ const ACTIVE_STATUSES = [
   "assistance_received",
 ];
 
-
+// GET returns all emergency incidents sorted by most recent first, used to populate the map markers and incident list
 export async function GET() {
   try {
     const client = await clientPromise;
@@ -36,6 +37,7 @@ export async function GET() {
   }
 }
 
+// POST creates a new emergency incident for the signed-in user, validates required fields, prevents duplicates for self-reports, and publishes an Ably event to all connected clients
 export async function POST(req) {
   try {
     const session = await getServerSession(authOptions);
@@ -60,6 +62,7 @@ export async function POST(req) {
       shareLiveLocation,
     } = body || {};
 
+    // live location must be enabled before an emergency can be created so helpers can see the location on the map
     if (!shareLiveLocation) {
       return NextResponse.json(
         { error: "Live location must be enabled." },
@@ -86,6 +89,7 @@ export async function POST(req) {
 
     const now = new Date();
 
+    // prevent a user from creating a second active self-report while one is still open
     if (reportMode === "self") {
       const existingActive = await emergencies.findOne({
         userEmail: session.user.email,
@@ -100,6 +104,7 @@ export async function POST(req) {
       }
     }
 
+    // build the full emergency document with all required fields and null timestamps for future state transitions
     const emergencyDoc = {
       userEmail: session.user.email,
       userName: session.user.name || "Rider",
@@ -107,7 +112,7 @@ export async function POST(req) {
       lat,
       lng,
 
-      reportMode, 
+      reportMode,
       reportedForName:
         reportMode === "third_party" && typeof reportedForName === "string"
           ? reportedForName.trim()
@@ -150,6 +155,7 @@ export async function POST(req) {
       _id: String(result.insertedId),
     };
 
+    // publish to the emergencies:live channel so all open clients immediately show the new incident on the map
     try {
       const ably = getAblyRest();
       await ably.channels.get("emergencies:live").publish("emergency-updated", {
@@ -167,6 +173,7 @@ export async function POST(req) {
   }
 }
 
+// PATCH applies a status-transition action (claim-help, route-started, arrived, resolve, cancel, update-location) to an existing emergency and broadcasts the change via Ably
 export async function PATCH(req) {
   try {
     const session = await getServerSession(authOptions);
@@ -198,6 +205,7 @@ export async function PATCH(req) {
     const now = new Date();
     let update = {};
 
+    // each action maps to a specific status transition and latestUpdate message shown to all riders
     switch (action) {
       case "claim-help":
         update = {
@@ -245,6 +253,7 @@ export async function PATCH(req) {
         };
         break;
 
+      // update-location only patches lat/lng and is called by the throttled position watcher
       case "update-location":
         if (typeof lat === "number" && typeof lng === "number") {
           update = {
@@ -269,6 +278,7 @@ export async function PATCH(req) {
 
     const updated = await emergencies.findOne({ _id: emergency._id });
 
+    // publish the updated emergency so all connected clients re-render markers and incident cards
     try {
       const ably = getAblyRest();
       await ably.channels.get("emergencies:live").publish("emergency-updated", {

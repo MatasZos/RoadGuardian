@@ -2,10 +2,12 @@ import clientPromise from "@/lib/mongodb";
 import bcrypt from "bcryptjs";
 import { cleanString, cleanEmail } from "@/lib/utils";
 
+// validEmail checks the email format with a standard RFC-style regex
 function validEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
+// strongPassword enforces 8+ chars with at least one uppercase, lowercase, number, and symbol
 function strongPassword(password) {
   return (
     password.length >= 8 &&
@@ -16,10 +18,12 @@ function strongPassword(password) {
   );
 }
 
+// validPhone validates Irish mobile numbers starting with 08 and exactly 10 digits long
 function validPhone(phone) {
   return /^08[0-9]{8}$/.test(phone);
 }
 
+// POST creates a new user account after validating all fields and checking for email duplicates
 export async function POST(req) {
   let body;
 
@@ -98,6 +102,7 @@ export async function POST(req) {
   } catch (err) {
     console.error("REGISTER ERROR:", err);
 
+    // handle MongoDB duplicate key error as a fallback in case the findOne check races
     if (err?.code === 11000) {
       return new Response(JSON.stringify({ error: "Email already exists" }), {
         status: 400,

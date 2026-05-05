@@ -1,4 +1,4 @@
-// Slide-out chat panel: rider in distress + their helper(s) talk here.
+// Slide-out chat panel that lets riders in distress and their helpers talk in real time
 
 "use client";
 import { useEffect, useRef } from "react";
@@ -12,6 +12,7 @@ import {
   Alert,
 } from "react-bootstrap";
 
+// ChatSidebar component that renders a floating button and an offcanvas panel with a conversation list and message thread
 export default function ChatSidebar({
   open,
   onClose,
@@ -29,7 +30,7 @@ export default function ChatSidebar({
   onStartChat,
   onSendMessage,
 }) {
-  // Stick to the bottom whenever a new message arrives or the user switches chat.
+  // scroll to the latest message whenever messages change or the user switches conversation
   const messagesEndRef = useRef(null);
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -37,7 +38,7 @@ export default function ChatSidebar({
 
   return (
     <>
-      {/* Floating "open chat" button when the sidebar is closed. */}
+      {/* floating action button — only visible when the sidebar is closed */}
       {!open && (
         <Button
           variant="primary"
@@ -53,7 +54,7 @@ export default function ChatSidebar({
         show={open}
         onHide={() => onClose(false)}
         placement="end"
-        backdrop={false} /* don't dim the page — user still needs to see the map */
+        backdrop={false} /* don't dim the map — user still needs to see it */
         scroll={true}
         className="rg-chat-offcanvas bg-dark text-light"
       >
@@ -68,10 +69,10 @@ export default function ChatSidebar({
           </Offcanvas.Title>
         </Offcanvas.Header>
 
-        {/* Two-column grid: conversation list + active conversation.
-            Stacks vertically on narrow screens (see the @media block below). */}
+        {/* two-column grid: conversation list on the left, active thread on the right — stacks vertically on narrow screens */}
         <Offcanvas.Body className="p-0 d-flex flex-column">
           <div className="rg-chat-grid flex-grow-1 d-grid">
+            {/* left panel — new chat input and scrollable conversation list */}
             <div className="rg-chat-list border-end border-secondary-subtle p-3 d-flex flex-column">
               <div className="mb-3">
                 <Form.Label className="small fw-semibold text-body-secondary text-uppercase mb-1">
@@ -114,6 +115,7 @@ export default function ChatSidebar({
                 ) : (
                   <Stack gap={2}>
                     {conversations.map((conv) => {
+                      // show the other participant's email as the conversation label
                       const otherUser =
                         conv.participants.find((p) => p !== email) || "Unknown";
                       const isActive = selectedConversation?._id === conv._id;
@@ -136,6 +138,7 @@ export default function ChatSidebar({
               </div>
             </div>
 
+            {/* right panel — message thread and send input for the selected conversation */}
             <div className="rg-chat-panel d-flex flex-column">
               {!selectedConversation ? (
                 <div className="d-flex flex-column align-items-center justify-content-center h-100 text-body-secondary p-4 text-center">
@@ -197,6 +200,7 @@ export default function ChatSidebar({
         </Offcanvas.Body>
       </Offcanvas>
 
+      {/* custom styles for the FAB, offcanvas width, grid layout, and message panel */}
       <style>{`
         .rg-chat-fab {
           position: fixed;
@@ -236,6 +240,7 @@ export default function ChatSidebar({
   );
 }
 
+// MessageBubble component that renders a single chat message aligned right for sent messages and left for received ones
 function MessageBubble({ message, isMine }) {
   return (
     <div

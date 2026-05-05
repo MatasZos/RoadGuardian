@@ -34,6 +34,7 @@ import ChatSidebar from "./ChatSidebar";
 // Don't push location updates more than once every five seconds.
 const LOCATION_PUSH_INTERVAL_MS = 5000;
 
+// empty form state used when creating a new emergency report
 const EMPTY_FORM = {
   reportMode: "self",
   reportedForName: "",
@@ -45,23 +46,32 @@ const EMPTY_FORM = {
   phone: "",
 };
 
+// EmergencyPage component that shows a live map, lets users report emergencies, and coordinate help with nearby riders
 export default function EmergencyPage() {
   const router = useRouter();
   const { data: session, status } = useSession();
   const email = session?.user?.email || null;
 
+  //user profile and general UI state
   const [fullName, setFullName] = useState("");
   const [error, setError] = useState("");
   const [followMode, setFollowMode] = useState(true);
+
+  //incident and rider data fetched from the API
   const [incidents, setIncidents] = useState([]);
   const [liveRiders, setLiveRiders] = useState([]);
   const [loadingIncidents, setLoadingIncidents] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
+
+  //UI visibility toggles for the emergency form, live location sharing and chat sidebar
   const [showEmergencyForm, setShowEmergencyForm] = useState(false);
   const [shareLiveLocation, setShareLiveLocation] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
+
+  //form state for creating a new emergency report
   const [form, setForm] = useState(EMPTY_FORM);
 
+  //map instance refs and marker refs managed by the useMapbox hook
   const {
     mapContainerRef,
     mapRef,
@@ -71,10 +81,12 @@ export default function EmergencyPage() {
     followModeRef,
   } = useMapbox({ status, chatOpen, setError, setFollowMode });
 
+  //ref to track whether the map has already been centered on the user's position on the first GPS fix
   const hasCenteredRef = useRef(false);
   const lastEmergencyPushRef = useRef(0);
   const lastLivePushRef = useRef(0);
 
+  // memoize active and resolved incidents separately so child components only re-render when needed
   const activeIncidents = useMemo(
     () => incidents.filter((i) => !isClosedStatus(i.status)),
     [incidents]
@@ -97,6 +109,7 @@ export default function EmergencyPage() {
     [incidents, email]
   );
 
+  //set up geolocation watching, updating the user's marker and pushing location updates when an active emergency exists
   const { coords, setCoords } = useGeolocation({
     email,
     onPosition: ({ lat, lng }) => {
@@ -109,6 +122,7 @@ export default function EmergencyPage() {
     },
   });
 
+  //map routing helpers that draw or clear a route from the user's location to another rider's position
   const { updateDrivingCamera, drawRouteToUser, clearRoute } = useMapRoute({
     mapRef,
     followModeRef,
@@ -117,8 +131,10 @@ export default function EmergencyPage() {
     onError: setError,
   });
 
+  //chat hook that manages conversations, messages and the sidebar open state
   const chat = useEmergencyChat({ email, setChatOpen });
 
+  //render incident markers on the map, with popups for claiming help, routing and messaging
   useIncidentMarkers({
     mapRef,
     markersRef: incidentMarkersRef,
@@ -130,6 +146,7 @@ export default function EmergencyPage() {
     onMessageUser: chat.startOrOpenConversation,
   });
 
+  //render live rider markers on the map with popups to route to them or open a chat
   useRiderMarkers({
     mapRef,
     markersRef: riderMarkersRef,
@@ -141,16 +158,19 @@ export default function EmergencyPage() {
     onMessageUser: chat.startOrOpenConversation,
   });
 
+  //subscribe to real-time emergency and rider events via SSE so the map updates without polling
   useEmergencyRealtime({
     email,
     onIncidentEvent: fetchIncidents,
     onRiderEvent: fetchLiveRiders,
   });
 
+  //keep the followModeRef in sync with the followMode state so map handlers can read it without a stale closure
   useEffect(() => {
     followModeRef.current = followMode;
   }, [followMode]);
 
+  //redirect unauthenticated users to login and populate the full name from the session
   useEffect(() => {
     if (status === "loading") return;
     if (status === "unauthenticated") {
@@ -189,8 +209,7 @@ export default function EmergencyPage() {
     }
   }, [coords, fullName]);
 
-  // Sync the live-location switch state up to the server so other riders
-  // see us appear/disappear from their map.
+  // Sync the live-location switch state up to the server so other riders see users appear/disappear from their map.
   useEffect(() => {
     if (!email || !coords) return;
     fetch("/api/live-location", {
@@ -204,11 +223,13 @@ export default function EmergencyPage() {
     }).catch(console.error);
   }, [shareLiveLocation, email, coords]);
 
+  //load conversations when the chat sidebar is opened so it always shows up-to-date messages
   useEffect(() => {
     if (!chatOpen || !email) return;
     chat.loadConversations();
   }, [chatOpen, email]);
 
+  //fetch initial incidents and live riders once the user's email is available
   useEffect(() => {
     if (!email) return;
     fetchIncidents();
@@ -217,6 +238,7 @@ export default function EmergencyPage() {
 
   // ── Server actions ───────────────────────────────────────────────────────
 
+  // fetchIncidents loads all emergencies from the API and updates the incidents state
   async function fetchIncidents() {
     setLoadingIncidents(true);
     try {
@@ -234,6 +256,7 @@ export default function EmergencyPage() {
     }
   }
 
+  // fetchLiveRiders loads the current list of riders sharing their live location from the API
   async function fetchLiveRiders() {
     try {
       const res = await fetch("/api/live-location", { cache: "no-store" });
@@ -244,6 +267,7 @@ export default function EmergencyPage() {
     }
   }
 
+  // maybeSendEmergencyLocationUpdate throttles live location pushes for an active emergency to once every 5 seconds
   async function maybeSendEmergencyLocationUpdate(lat, lng) {
     if (!myActiveIncident?.shareLiveLocation) return;
     const now = Date.now();
@@ -265,6 +289,7 @@ export default function EmergencyPage() {
     }
   }
 
+  // maybeSendLiveLocation throttles general live location pushes to once every 5 seconds when sharing is enabled
   async function maybeSendLiveLocation(lat, lng) {
     if (!shareLiveLocation || !email) return;
     const now = Date.now();
@@ -281,6 +306,7 @@ export default function EmergencyPage() {
     }
   }
 
+  // updateIncident sends a PATCH action to the API (e.g. claim-help, resolve, cancel) and refreshes the incidents list
   async function updateIncident(emergencyId, action) {
     try {
       const res = await fetch("/api/emergency", {
@@ -315,6 +341,7 @@ export default function EmergencyPage() {
     }
   }
 
+  // handleCreateEmergency validates the form, gets the current location and posts a new emergency to the API
   async function handleCreateEmergency() {
     setSubmitLoading(true);
     setError("");
@@ -357,6 +384,7 @@ export default function EmergencyPage() {
     }
   }
 
+  // handleReportClick guards against reporting without live location enabled and toggles the emergency form
   function handleReportClick() {
     if (!shareLiveLocation) {
       setError("You must enable live location before reporting an emergency.");
@@ -368,6 +396,7 @@ export default function EmergencyPage() {
 
   // ── Render ───────────────────────────────────────────────────────────────
 
+  // show a full-page spinner while the session is being resolved
   if (status === "loading") {
     return (
       <div className="rg-emergency-page d-flex align-items-center justify-content-center min-vh-100">
@@ -382,6 +411,7 @@ export default function EmergencyPage() {
 
       <Container fluid="xxl" className="py-4">
         <Stack gap={3}>
+          {/* page header with title, description and the main action buttons */}
           <div className="d-flex flex-column flex-lg-row justify-content-between align-items-lg-end gap-3">
             <div>
               <h1 className="rg-page-title fw-bold mb-1 text-danger">
@@ -394,6 +424,7 @@ export default function EmergencyPage() {
             </div>
 
             <div className="d-flex flex-wrap gap-2">
+              // report emergency button — disabled while the user already has an active incident
               <Button
                 variant="danger"
                 size="lg"
@@ -406,6 +437,7 @@ export default function EmergencyPage() {
               <Button variant="outline-light" onClick={clearRoute}>
                 <i className="bi bi-x-lg me-2"></i>Clear Route
               </Button>
+              // follow mode toggle — when on, the map camera stays centred on the user's position
               <Button
                 variant={followMode ? "success" : "outline-secondary"}
                 onClick={() => setFollowMode((p) => !p)}
@@ -416,9 +448,10 @@ export default function EmergencyPage() {
             </div>
           </div>
 
-          {/* Live-location toggle + map colour legend. */}
+          {/* live-location toggle and map colour legend */}
           <Card className="rg-control-bar border-0">
             <Card.Body className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 py-3">
+              // live location switch — must be on before a user can report or share their position with other riders
               <Form.Check
                 type="switch"
                 id="shareLiveLocation"
@@ -427,6 +460,7 @@ export default function EmergencyPage() {
                 onChange={(e) => setShareLiveLocation(e.target.checked)}
               />
 
+              {/* colour legend explaining each marker type on the map */}
               <div className="d-flex flex-wrap gap-3 small text-body-secondary">
                 <LegendDot color="#ef4444" label="Emergency active" />
                 <LegendDot color="#3b82f6" label="Nearby rider" />
@@ -436,10 +470,12 @@ export default function EmergencyPage() {
             </Card.Body>
           </Card>
 
+          {/* mapbox map container — renders the live map with markers for the user, incidents and nearby riders */}
           <div className="rg-map-wrap rounded-4 overflow-hidden shadow">
             <div ref={mapContainerRef} className="rg-map" />
           </div>
 
+          // dismissible error alert shown when an API call or validation check fails
           {error && (
             <Alert variant="danger" dismissible onClose={() => setError("")} className="mb-0">
               <i className="bi bi-exclamation-triangle-fill me-2"></i>
@@ -447,6 +483,7 @@ export default function EmergencyPage() {
             </Alert>
           )}
 
+          // emergency report form — only shown when the user has toggled it and has no existing active incident
           {showEmergencyForm && !myActiveIncident && (
             <EmergencyForm
               form={form}
@@ -457,6 +494,7 @@ export default function EmergencyPage() {
             />
           )}
 
+          // active incident banner — shown when the user has an ongoing emergency so they can resolve or cancel it
           {myActiveIncident && (
             <ActiveIncidentCard
               incident={myActiveIncident}
@@ -465,6 +503,7 @@ export default function EmergencyPage() {
             />
           )}
 
+          {/* incident list showing active emergencies and recent history with actions for each */}
           <IncidentList
             activeIncidents={activeIncidents}
             recentHistory={recentHistory}
@@ -477,6 +516,7 @@ export default function EmergencyPage() {
         </Stack>
       </Container>
 
+      {/* chat sidebar for direct messaging between riders during an emergency */}
       <ChatSidebar
         open={chatOpen}
         onClose={setChatOpen}
@@ -495,6 +535,7 @@ export default function EmergencyPage() {
         onSendMessage={chat.handleSendMessage}
       />
 
+      // custom styles for the emergency page, including the background gradient, map dimensions, card styles and form field overrides
       <style>{`
         .rg-emergency-page {
           background:
@@ -565,6 +606,7 @@ export default function EmergencyPage() {
   );
 }
 
+// LegendDot component that renders a coloured dot with a label for the map legend
 function LegendDot({ color, label }) {
   return (
     <span className="d-inline-flex align-items-center gap-2">

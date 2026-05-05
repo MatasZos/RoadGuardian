@@ -2,7 +2,7 @@ import { useRef } from "react";
 import mapboxgl from "mapbox-gl";
 import { getLiveCoords } from "./useGeolocation";
 
-// Compass bearing (degrees) from one point to another.
+// getBearing calculates the compass bearing in degrees from one lat/lng point to another
 function getBearing(from, to) {
   const toRad = (d) => (d * Math.PI) / 180;
   const toDeg = (r) => (r * 180) / Math.PI;
@@ -17,8 +17,7 @@ function getBearing(from, to) {
   return (toDeg(Math.atan2(y, x)) + 360) % 360;
 }
 
-// Camera + route-line management: tilt-and-track sat-nav style camera and
-// the blue driving-route line that gets drawn on demand.
+// useMapRoute manages the tilt-and-track sat-nav camera and the blue driving-route line drawn on the map
 export function useMapRoute({
   mapRef,
   followModeRef,
@@ -28,6 +27,7 @@ export function useMapRoute({
 }) {
   const lastCoordsRef = useRef(null);
 
+  // updateDrivingCamera pans and tilts the camera to follow the user's current position when follow mode is active
   function updateDrivingCamera(lat, lng) {
     if (!mapRef.current || !followModeRef.current) return;
 
@@ -47,10 +47,12 @@ export function useMapRoute({
     lastCoordsRef.current = { lat, lng };
   }
 
+  // drawRouteToUser fetches a driving route from the Mapbox Directions API and draws it as a blue line on the map
   async function drawRouteToUser(targetLng, targetLat) {
     if (!mapRef.current) return;
     try {
       let start = coords;
+      // fall back to a one-shot position read if the watcher hasn't produced a fix yet
       if (!start?.lat || !start?.lng) {
         start = await getLiveCoords();
         setCoords(start);
@@ -72,6 +74,7 @@ export function useMapRoute({
 
       const geoJSON = { type: "Feature", properties: {}, geometry: route };
       const map = mapRef.current;
+      // reuse the existing source if it exists — avoids a duplicate-source error on re-routing
       if (map.getSource("route")) {
         map.getSource("route").setData(geoJSON);
       } else {
@@ -94,6 +97,7 @@ export function useMapRoute({
     }
   }
 
+  // clearRoute removes the route line and its data source from the map
   function clearRoute() {
     const map = mapRef.current;
     if (!map) return;

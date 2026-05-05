@@ -12,9 +12,11 @@ import {
   Col,
 } from "react-bootstrap";
 
+// RegisterPage component that collects user details and creates a new account via the /api/register endpoint
 export default function RegisterPage() {
   const router = useRouter();
 
+  //form state holding the values for each registration field
   const [form, setForm] = useState({
     fullName: "",
     email: "",
@@ -26,11 +28,13 @@ export default function RegisterPage() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  //updateField updates a single field in the form state and clears any existing feedback message when the user starts typing
   function updateField(field, value) {
     if (message) setMessage("");
     setForm((prev) => ({ ...prev, [field]: value }));
   }
 
+  //handleRegister sends the form data to the register API and redirects to the login page on success
   async function handleRegister(e) {
     e.preventDefault();
     setMessage("");
@@ -61,6 +65,7 @@ export default function RegisterPage() {
   return (
     <div className="rg-auth-page rg-auth-register">
       <div className="rg-glass-card">
+        {/* logo centred at the top of the registration card */}
         <div className="text-center mb-3">
           <img
             src="/logo.png"
@@ -69,6 +74,7 @@ export default function RegisterPage() {
           />
         </div>
 
+        {/* heading and subtitle shown above the registration form */}
         <div className="text-center mb-4">
           <h1 className="rg-auth-title text-white mb-2">Create account</h1>
           <p className="text-body-secondary mb-0">
@@ -77,6 +83,7 @@ export default function RegisterPage() {
           </p>
         </div>
 
+        {/* registration form with full name, email, password and phone fields */}
         <Form onSubmit={handleRegister}>
           <Form.Group className="mb-3" controlId="registerFullName">
             <Form.Label className="fw-semibold text-body-secondary small">
@@ -115,12 +122,14 @@ export default function RegisterPage() {
             </InputGroup>
           </Form.Group>
 
+          // password and phone fields placed side by side on wider screens
           <Row className="g-3">
             <Col xs={12} md={6}>
               <Form.Group className="mb-3" controlId="registerPassword">
                 <Form.Label className="fw-semibold text-body-secondary small">
                   Password
                 </Form.Label>
+                // password field with a toggle to reveal the entered password
                 <InputGroup size="lg">
                   <Form.Control
                     type={showPassword ? "text" : "password"}
@@ -172,6 +181,7 @@ export default function RegisterPage() {
             </Col>
           </Row>
 
+          // register button shows a spinner while the account creation request is being processed
           <Button
             type="submit"
             variant="primary"
@@ -192,6 +202,7 @@ export default function RegisterPage() {
           </Button>
         </Form>
 
+        // feedback alert shown below the button after the registration attempt, green for success or red for error
         {message && (
           <Alert
             variant={isSuccess ? "success" : "danger"}
@@ -208,6 +219,7 @@ export default function RegisterPage() {
           </Alert>
         )}
 
+        // link to the login page for users who already have an existing account
         <div className="text-center mt-4">
           <span className="text-body-secondary small">
             Already have an account?{" "}

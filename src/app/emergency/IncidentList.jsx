@@ -2,6 +2,7 @@ import { Card, Row, Col, Badge, Button, Spinner } from "react-bootstrap";
 import { STATUS_LABELS } from "./constants";
 import { prettify, formatTime } from "./utils";
 
+// IncidentList component that shows active incidents and recent history side by side, with action buttons scoped to the viewing user's role
 export default function IncidentList({
   activeIncidents,
   recentHistory,
@@ -13,6 +14,7 @@ export default function IncidentList({
 }) {
   return (
     <Row className="g-4">
+      {/* active incidents panel — shows all open emergencies with per-role action buttons */}
       <Col xs={12} lg={7}>
         <Card className="rg-list-panel border-0 h-100">
           <Card.Body className="p-4">
@@ -51,6 +53,7 @@ export default function IncidentList({
         </Card>
       </Col>
 
+      {/* recent history panel — resolved and cancelled incidents from the last period */}
       <Col xs={12} lg={5}>
         <Card className="rg-list-panel border-0 h-100">
           <Card.Body className="p-4">
@@ -78,6 +81,7 @@ export default function IncidentList({
   );
 }
 
+// ActiveIncidentItem component that renders one active incident row with buttons scoped to the viewer's role (reporter / helper / bystander)
 function ActiveIncidentItem({
   incident,
   email,
@@ -85,8 +89,7 @@ function ActiveIncidentItem({
   onUpdateIncident,
   onMessage,
 }) {
-  // Reporter sees "cancel/resolve"; everyone else sees "offer help".
-  // The helper (the one who claimed it) sees the "on the way / arrived" buttons.
+  // reporter sees cancel/resolve; the helper who claimed it sees on-the-way / arrived; bystanders see offer-help and message
   const isMine = incident.userEmail === email;
   const isMyHelper = incident.helperUserEmail === email;
 
@@ -128,6 +131,7 @@ function ActiveIncidentItem({
           <i className="bi bi-geo-alt-fill me-1"></i>Route
         </Button>
 
+        {/* bystander actions — not shown to the reporter of their own incident */}
         {!isMine && (
           <>
             <Button
@@ -153,6 +157,7 @@ function ActiveIncidentItem({
           </>
         )}
 
+        {/* helper-specific actions — only shown to the rider who claimed the emergency */}
         {isMyHelper && (
           <>
             <Button
@@ -179,6 +184,7 @@ function ActiveIncidentItem({
   );
 }
 
+// HistoryItem component that renders a compact closed-incident row showing name, type, final status, and time
 function HistoryItem({ incident }) {
   return (
     <div className="rg-history-item p-2 rounded-2">
@@ -194,6 +200,7 @@ function HistoryItem({ incident }) {
   );
 }
 
+// EmptyState component that renders a centred icon and message when a list has no items
 function EmptyState({ icon, text }) {
   return (
     <div className="text-center text-body-secondary py-4">

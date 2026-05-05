@@ -4,6 +4,7 @@ import { ObjectId } from "mongodb";
 import { getAblyRest } from "@/lib/ablyServer";
 import { cleanStringOrEmpty } from "@/lib/utils";
 
+// daysUntil returns the number of days until the given expiry date string, or null if the date is invalid
 function daysUntil(expiryDateStr) {
   if (!expiryDateStr) return null;
   const d = new Date(`${expiryDateStr}T00:00:00`);
@@ -22,6 +23,7 @@ async function upsertExpiryNotification(db, docId, userEmail, title, expiryDate)
   const daysLeft = daysUntil(expiryDate);
   const ably = getAblyRest();
 
+  // if the document is not expiring within 30 days, clear any existing reminder notification for it
   if (daysLeft === null || daysLeft > 30) {
     await notifications.deleteMany({
       userEmail,
@@ -40,6 +42,7 @@ async function upsertExpiryNotification(db, docId, userEmail, title, expiryDate)
     return;
   }
 
+  // build the notification text based on whether the document is already expired or still counting down
   const notificationDoc = {
     userEmail,
     title: "Document reminder",
@@ -60,6 +63,7 @@ async function upsertExpiryNotification(db, docId, userEmail, title, expiryDate)
     { upsert: true }
   );
 
+  // notify the user's Ably channel so their notification bell updates without a page reload
   try {
     await ably.channels.get(`user:${userEmail}`).publish("notification-refresh", {
       sourceType: "documentExpiry",
@@ -70,6 +74,7 @@ async function upsertExpiryNotification(db, docId, userEmail, title, expiryDate)
   }
 }
 
+// GET returns all documents belonging to the requesting user, sorted by soonest expiry then most recently created
 export async function GET(req) {
   try {
     const email = req.headers.get("x-user-email");
@@ -91,6 +96,7 @@ export async function GET(req) {
   }
 }
 
+// POST creates a new document record for the user and updates their expiry notification if applicable
 export async function POST(req) {
   try {
     const body = await req.json();
@@ -108,6 +114,7 @@ export async function POST(req) {
 
     const result = await db.collection("documents").insertOne(doc);
 
+    // sync the notification after insert so a new expiring document immediately shows in the bell
     await upsertExpiryNotification(
       db,
       result.insertedId,
@@ -123,6 +130,7 @@ export async function POST(req) {
   }
 }
 
+// PUT updates an existing document's title, expiry date and notes, then resyncs its expiry notification
 export async function PUT(req) {
   try {
     const body = await req.json();
@@ -142,6 +150,7 @@ export async function PUT(req) {
       }
     );
 
+    // re-fetch the updated document to pass the correct values into the notification sync
     const updated = await db.collection("documents").findOne({ _id: id });
     if (updated) {
       await upsertExpiryNotification(
@@ -160,6 +169,7 @@ export async function PUT(req) {
   }
 }
 
+// DELETE removes a document by id and clears any associated expiry notification from the user's feed
 export async function DELETE(req) {
   try {
     const body = await req.json();
@@ -168,6 +178,7 @@ export async function DELETE(req) {
     const db = client.db("login");
     const id = new ObjectId(body._id);
 
+    // read the document before deleting so we have the userEmail needed to clean up notifications
     const existing = await db.collection("documents").findOne({ _id: id });
     await db.collection("documents").deleteOne({ _id: id });
 
@@ -178,6 +189,7 @@ export async function DELETE(req) {
         sourceId: String(existing._id),
       });
 
+      // publish a refresh event so the notification bell updates immediately after deletion
       try {
         const ably = getAblyRest();
         await ably.channels.get(`user:${existing.userEmail}`).publish("notification-refresh", {

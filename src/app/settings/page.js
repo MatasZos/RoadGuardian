@@ -16,6 +16,7 @@ import Navbar from "../components/Navbar";
 import AccountPill from "../components/AccountPill";
 import UnauthedPrompt from "../components/UnauthedPrompt";
 
+// default settings used when no saved preferences exist for the user yet
 const DEFAULTS = {
   emailReminders: true,
   documentReminders: true,
@@ -24,6 +25,7 @@ const DEFAULTS = {
   compactMode: false,
 };
 
+// SettingsPage component that lets users view and update their notification preferences and display options
 export default function SettingsPage() {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -33,6 +35,7 @@ export default function SettingsPage() {
   const [settings, setSettings] = useState(DEFAULTS);
   const [toast, setToast] = useState(null);
 
+  //fetch the user's saved settings from the API when the session resolves, or clear the loading state for unauthenticated users
   useEffect(() => {
     if (status === "loading") return;
     if (status === "unauthenticated") {
@@ -46,6 +49,7 @@ export default function SettingsPage() {
         const res = await fetch("/api/settings", { method: "GET" });
         const data = await res.json();
         if (res.ok) {
+          // merge fetched settings over the defaults so any new keys still have a fallback value
           setSettings((prev) => ({ ...prev, ...(data?.settings || {}) }));
         } else {
           showToast("danger", data?.error || "Failed to load settings");
@@ -58,14 +62,17 @@ export default function SettingsPage() {
     })();
   }, [status]);
 
+  //showToast displays a toast notification with the given Bootstrap variant and message
   function showToast(variant, message) {
     setToast({ variant, message });
   }
 
+  //toggle flips a single boolean setting key in the settings state
   function toggle(key) {
     setSettings((prev) => ({ ...prev, [key]: !prev[key] }));
   }
 
+  //handleSave sends the current settings object to the API via a PUT request and shows a success or error toast
   async function handleSave() {
     setSaving(true);
     try {
@@ -95,6 +102,7 @@ export default function SettingsPage() {
 
       <div className="rg-settings-page min-vh-100 py-4 py-md-5">
         <Container style={{ maxWidth: 1100 }}>
+          {/* page header with title, description and account pill */}
           <div className="d-flex flex-column flex-md-row align-items-md-end justify-content-between gap-3 mb-4">
             <div>
               <h1 className="rg-page-title fw-bold mb-2">
@@ -104,20 +112,24 @@ export default function SettingsPage() {
                 Manage your preferences and reminders for RoadGuardian.
               </p>
             </div>
+            // AccountPill showing the signed-in user's email, or null if unauthenticated
             <AccountPill email={unauthenticated ? null : session?.user?.email} />
           </div>
 
           <Card className="rg-section-card border-0">
             <Card.Body className="p-4">
               {loading ? (
+                // show a loading skeleton while settings are being fetched from the server
                 <LoadingSkeleton />
               ) : unauthenticated ? (
+                // if the user is not authenticated, prompt them to log in before viewing settings
                 <UnauthedPrompt
                   message="Please log in to view and update your settings."
                   onLogin={() => router.push("/login")}
                 />
               ) : (
                 <>
+                  {/* preferences header with a save button */}
                   <div className="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-3 pb-3 mb-3 border-bottom border-secondary-subtle">
                     <div>
                       <h2 className="h5 fw-bold mb-1">Preferences</h2>
@@ -125,6 +137,7 @@ export default function SettingsPage() {
                         Saved to your account and synced across devices.
                       </p>
                     </div>
+                    // save button shows a spinner while the settings are being written to the database
                     <Button
                       variant="primary"
                       onClick={handleSave}
@@ -148,6 +161,7 @@ export default function SettingsPage() {
                     </Button>
                   </div>
 
+                  {/* reminders section — controls for email, document and maintenance notification toggles */}
                   <SettingsSection title="Reminders" icon="bi-bell-fill">
                     <SettingRow
                       id="emailReminders"
@@ -172,6 +186,7 @@ export default function SettingsPage() {
                     />
                   </SettingsSection>
 
+                  {/* safety section — controls whether the app can access the user's location for emergencies */}
                   <SettingsSection title="Safety" icon="bi-shield-fill-check">
                     <SettingRow
                       id="emergencyLocation"
@@ -182,6 +197,7 @@ export default function SettingsPage() {
                     />
                   </SettingsSection>
 
+                  {/* display section — controls UI layout preferences like compact mode */}
                   <SettingsSection title="Display" icon="bi-display" isLast>
                     <SettingRow
                       id="compactMode"
@@ -198,6 +214,7 @@ export default function SettingsPage() {
         </Container>
       </div>
 
+      //toast container for showing success or error feedback after saving settings
       <ToastContainer position="bottom-end" className="p-3">
         <Toast
           show={!!toast}
@@ -206,7 +223,6 @@ export default function SettingsPage() {
           autohide
           bg={toast?.variant}
         >
-        
           <Toast.Body className="text-white d-flex align-items-center gap-2">
             <i
               className={`bi ${
@@ -219,6 +235,8 @@ export default function SettingsPage() {
           </Toast.Body>
         </Toast>
       </ToastContainer>
+
+      // custom styles for the settings page, including the background, card styles and toggle switch overrides
       <style>{`
         .rg-settings-page {
           background: radial-gradient(circle at top, #101a1f, #000);
@@ -251,7 +269,7 @@ export default function SettingsPage() {
   );
 }
 
-// a section component for grouping related settings together
+// a section component for grouping related settings together under a labelled heading
 function SettingsSection({ title, icon, children, isLast }) {
   return (
     <section className={isLast ? "pt-3" : "pt-3 pb-2 border-bottom border-secondary-subtle mb-3"}>

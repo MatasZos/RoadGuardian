@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
 import { getAblyClient } from "@/lib/ablyClient";
 
-// Encapsulates the conversation/messages state and Ably wiring used by the
-// chat sidebar on the emergency page. Returns a flat object the page can
-// thread straight into <ChatSidebar />.
+// useEmergencyChat manages all conversation and messaging state for the emergency chat sidebar, including Ably subscriptions for real-time updates
 export function useEmergencyChat({ email, setChatOpen }) {
   const [conversations, setConversations] = useState([]);
   const [selectedConversation, setSelectedConversation] = useState(null);
@@ -13,6 +11,7 @@ export function useEmergencyChat({ email, setChatOpen }) {
   const [chatLoading, setChatLoading] = useState(false);
   const [chatError, setChatError] = useState("");
 
+  // loadConversations fetches all conversations the current user is a participant of
   async function loadConversations() {
     if (!email) return;
     const res = await fetch("/api/conversations", {
@@ -23,6 +22,7 @@ export function useEmergencyChat({ email, setChatOpen }) {
     setConversations(Array.isArray(data) ? data : []);
   }
 
+  // loadMessages fetches all messages for a given conversation id
   async function loadMessages(conversationId) {
     if (!email || !conversationId) return;
     const res = await fetch(
@@ -33,8 +33,7 @@ export function useEmergencyChat({ email, setChatOpen }) {
     setMessages(Array.isArray(data) ? data : []);
   }
 
-  // Open the panel with a conversation, creating one server-side if these
-  // two users have never spoken before.
+  // startOrOpenConversation opens an existing conversation with the given user or creates a new one, then optionally pre-fills the message input
   async function startOrOpenConversation(otherUserEmail, presetText = "") {
     if (!email || !otherUserEmail) return;
     const lower = otherUserEmail.trim().toLowerCase();
@@ -66,6 +65,7 @@ export function useEmergencyChat({ email, setChatOpen }) {
     if (presetText) setChatText(presetText);
   }
 
+  // handleStartChat validates the new-chat email input and creates a conversation, publishing Ably events so both sides see it immediately
   async function handleStartChat() {
     setChatError("");
     const otherUserEmail = newChatEmail.trim().toLowerCase();
@@ -95,7 +95,7 @@ export function useEmergencyChat({ email, setChatOpen }) {
     setNewChatEmail("");
     await loadMessages(String(data._id));
 
-    // Notify both sides so the new conversation appears immediately.
+    // notify both participants so the new conversation appears in their sidebar immediately
     try {
       const ably = getAblyClient();
       await ably.channels
@@ -112,12 +112,14 @@ export function useEmergencyChat({ email, setChatOpen }) {
     }
   }
 
+  // handleSelectConversation switches the active thread and loads its messages
   async function handleSelectConversation(conversation) {
     setSelectedConversation(conversation);
     await loadMessages(String(conversation._id));
     setChatError("");
   }
 
+  // handleSendMessage posts a new message to the API and publishes Ably events so both participants see it in real time
   async function handleSendMessage() {
     const text = chatText.trim();
     if (!text || !selectedConversation || !email) return;
@@ -155,9 +157,7 @@ export function useEmergencyChat({ email, setChatOpen }) {
     await loadConversations();
     await loadMessages(String(selectedConversation._id));
 
-    // Realtime fan-out: the conversation channel for the message itself,
-    // plus a "conversation-updated" ping on each user's channel so both
-    // sides' conversation lists refresh.
+    // publish to the conversation channel and both user channels so the thread updates everywhere
     try {
       const ably = getAblyClient();
       const convChannel = ably.channels.get(
@@ -182,7 +182,7 @@ export function useEmergencyChat({ email, setChatOpen }) {
     }
   }
 
-  // Per-user channel: someone started a new chat with us, or sent a message.
+  // subscribe to the user's personal Ably channel to reload conversations when a new one is created or updated
   useEffect(() => {
     if (!email) return;
     const channel = getAblyClient().channels.get(`user:${email}`);
@@ -195,7 +195,7 @@ export function useEmergencyChat({ email, setChatOpen }) {
     return () => channel.unsubscribe(handler);
   }, [email]);
 
-  // Per-conversation channel: refresh messages when the active chat moves.
+  // subscribe to the active conversation's channel to reload messages when a new one arrives
   useEffect(() => {
     const id = selectedConversation?._id;
     if (!id || !email) return;

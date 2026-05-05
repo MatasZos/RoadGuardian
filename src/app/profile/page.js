@@ -17,14 +17,17 @@ import {
 } from "react-bootstrap";
 import Navbar from "../components/Navbar";
 
+// ProfilePage component that displays the user's account details and allows them to update their name, phone and password
 export default function ProfilePage() {
   const router = useRouter();
   const { data: session, status } = useSession();
 
+  //display values shown when the form is not in edit mode
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
 
+  //edit mode state and editable field values
   const [isEditing, setIsEditing] = useState(false);
   const [editName, setEditName] = useState("");
   const [editPhone, setEditPhone] = useState("");
@@ -32,10 +35,12 @@ export default function ProfilePage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
+  //feedback state for showing error and success alerts after save attempts
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [saving, setSaving] = useState(false);
 
+  //on session load, redirect unauthenticated users and seed the display fields from the session
   useEffect(() => {
     if (status === "loading") return;
     if (status === "unauthenticated") {
@@ -51,6 +56,7 @@ export default function ProfilePage() {
     setEditName(sessionName);
   }, [status, session, router]);
 
+  //once the email is available, fetch the full profile from the API to get the phone number and latest name
   useEffect(() => {
     if (!email) return;
 
@@ -77,6 +83,7 @@ export default function ProfilePage() {
     })();
   }, [email, session]);
 
+  //startEditing enters edit mode and resets any previous feedback messages
   function startEditing() {
     setError("");
     setSuccess("");
@@ -87,6 +94,7 @@ export default function ProfilePage() {
     setConfirmPassword("");
   }
 
+  //cancelEditing exits edit mode and restores the fields to their last saved values
   function cancelEditing() {
     setError("");
     setIsEditing(false);
@@ -96,6 +104,7 @@ export default function ProfilePage() {
     setConfirmPassword("");
   }
 
+  //handleSave validates the edited fields and sends a POST request to update the user's profile, including an optional password change
   async function handleSave(e) {
     e.preventDefault();
     setError("");
@@ -113,6 +122,7 @@ export default function ProfilePage() {
       return;
     }
 
+    //only validate password fields if the user has entered something in either password box
     const wantsPasswordChange =
       editPassword.length > 0 || confirmPassword.length > 0;
 
@@ -159,10 +169,12 @@ export default function ProfilePage() {
     }
   }
 
+  //handleSignOut signs the user out of their session and redirects them to the login page
   async function handleSignOut() {
     await signOut({ callbackUrl: "/login" });
   }
 
+  // show a spinner while the session is being resolved
   if (status === "loading") {
     return (
       <div className="rg-profile-page min-vh-100 d-flex align-items-center justify-content-center">
@@ -176,7 +188,7 @@ export default function ProfilePage() {
       <Navbar />
 
       <Container className="py-4 py-md-5" style={{ maxWidth: 760 }}>
-        {/* Hero */}
+        {/* hero card showing the page title and description */}
         <Card className="rg-section-card border-0 mb-4 overflow-hidden">
           <Card.Body className="p-4 p-md-5">
             <h1 className="rg-page-title fw-bold mb-2">
@@ -188,10 +200,12 @@ export default function ProfilePage() {
           </Card.Body>
         </Card>
 
+        {/* profile form card with read-only display or editable fields depending on isEditing state */}
         <Card className="rg-section-card border-0">
           <Card.Body className="p-4">
             <Form onSubmit={handleSave}>
               <Stack gap={3}>
+                // error and success alerts shown above the form fields after a save attempt
                 {error && (
                   <Alert variant="danger" className="mb-0">
                     <i className="bi bi-exclamation-triangle-fill me-2"></i>
@@ -210,6 +224,7 @@ export default function ProfilePage() {
                   </Alert>
                 )}
 
+                // name field — shown as read-only text when not editing, or as an input when editing
                 <Form.Group controlId="profileName">
                   <Form.Label className="text-body-secondary small fw-semibold">
                     NAME
@@ -227,6 +242,7 @@ export default function ProfilePage() {
 
                 <hr className="border-secondary-subtle my-0" />
 
+                // email field is always read-only as it is tied to the user's account and cannot be changed here
                 <Form.Group>
                   <Form.Label className="text-body-secondary small fw-semibold">
                     EMAIL
@@ -238,6 +254,7 @@ export default function ProfilePage() {
 
                 <hr className="border-secondary-subtle my-0" />
 
+                // phone field — shown as read-only text when not editing, or as an input when editing
                 <Form.Group controlId="profilePhone">
                   <Form.Label className="text-body-secondary small fw-semibold">
                     PHONE
@@ -258,6 +275,7 @@ export default function ProfilePage() {
 
                 <hr className="border-secondary-subtle my-0" />
 
+                // password field — shown as masked dots when not editing, or as new/confirm inputs when editing
                 <Form.Group>
                   <Form.Label className="text-body-secondary small fw-semibold">
                     PASSWORD
@@ -266,6 +284,7 @@ export default function ProfilePage() {
                     <div className="rg-readonly-value">••••••••••••</div>
                   ) : (
                     <Stack gap={2}>
+                      // new password input with a toggle to reveal the typed characters
                       <InputGroup>
                         <Form.Control
                           type={showPassword ? "text" : "password"}
@@ -306,6 +325,7 @@ export default function ProfilePage() {
 
                 <hr className="border-secondary-subtle my-0" />
 
+                {/* action buttons — edit/save/cancel on the left, sign out on the right */}
                 <Row className="g-2">
                   <Col xs={12} sm="auto">
                     {!isEditing ? (
@@ -318,6 +338,7 @@ export default function ProfilePage() {
                         Edit Profile
                       </Button>
                     ) : (
+                      // save and cancel buttons shown when the form is in edit mode
                       <Stack
                         direction="horizontal"
                         gap={2}
@@ -356,6 +377,7 @@ export default function ProfilePage() {
                     )}
                   </Col>
                   <Col className="d-flex justify-content-sm-end">
+                    // sign out button always visible to allow the user to log out from any state
                     <Button
                       variant="outline-danger"
                       type="button"
@@ -373,6 +395,7 @@ export default function ProfilePage() {
         </Card>
       </Container>
 
+      // custom styles for the profile page, including the background gradient, card styles and form field overrides
       <style>{`
         .rg-profile-page {
           background:

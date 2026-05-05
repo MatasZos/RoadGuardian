@@ -4,6 +4,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { getAblyRest } from "@/lib/ablyServer";
 
+// GET returns all riders currently sharing their live location, used to render nearby-rider markers on the map
 export async function GET() {
   try {
     const client = await clientPromise;
@@ -26,6 +27,7 @@ export async function GET() {
   }
 }
 
+// POST upserts the signed-in user's live location and enabled flag, then publishes an Ably event so other riders' maps update in real time
 export async function POST(req) {
   try {
     const session = await getServerSession(authOptions);
@@ -42,6 +44,7 @@ export async function POST(req) {
 
     const now = new Date();
 
+    // upsert so that toggling sharing off still records the enabled:false state for other clients
     await collection.updateOne(
       { userEmail: session.user.email },
       {
@@ -57,6 +60,7 @@ export async function POST(req) {
       { upsert: true }
     );
 
+    // publish to the riders:live Ably channel so other open tabs refresh their marker layer
     try {
       const ably = getAblyRest();
       await ably.channels.get("riders:live").publish("live-location-updated", {

@@ -1,5 +1,6 @@
 import { Card, Badge, Stack } from "react-bootstrap";
 
+// TaskCard component that renders a single maintenance task with its status badge, last and next service km, and any mechanic advisories
 function TaskCard({ task, showUrgent }) {
   return (
     <Card className="rg-task-card border-0 mb-2">
@@ -21,6 +22,7 @@ function TaskCard({ task, showUrgent }) {
           Next due: {task.nextDueKm.toLocaleString()} km
         </div>
 
+        {/* overdue tasks show an urgent message instead of remaining km */}
         {showUrgent ? (
           <div className="small text-danger fw-semibold mt-1">
             Get checked immediately.
@@ -41,22 +43,26 @@ function TaskCard({ task, showUrgent }) {
   );
 }
 
+// COLUMNS defines the three status categories shown in the board, each with its own colour, urgency flag, and display cap
 const COLUMNS = [
   { key: "overdue", label: "Overdue", color: "#ef4444", urgent: true, limit: 4 },
   { key: "dueSoon", label: "Due Soon", color: "#f59e0b", urgent: false, limit: 4 },
   { key: "upcoming", label: "Upcoming", color: "#22c55e", urgent: false, limit: 4 },
 ];
 
+// EMPTY holds the placeholder message shown when a column has no tasks
 const EMPTY = {
   overdue: "No overdue tasks",
   dueSoon: "Nothing due soon",
   upcoming: "No upcoming tasks yet",
 };
 
+// StatusBoard component that displays a bike's maintenance tasks sorted into overdue, due soon, and upcoming columns
 export default function StatusBoard({ summary, selectedBike }) {
   return (
     <Card className="rg-section-card border-0">
       <Card.Body>
+        {/* header showing the bike name and estimated current odometer */}
         <div className="mb-3">
           <h2 className="h5 fw-bold mb-1">
             <i className="bi bi-speedometer2 me-2 text-primary"></i>
@@ -73,6 +79,7 @@ export default function StatusBoard({ summary, selectedBike }) {
 
         <Stack gap={3}>
           {COLUMNS.map(({ key, label, color, urgent, limit }) => {
+            // slice to the column limit so the board stays scannable
             const tasks = summary ? summary[key].slice(0, limit) : [];
 
             return (
@@ -103,6 +110,7 @@ export default function StatusBoard({ summary, selectedBike }) {
         </Stack>
       </Card.Body>
 
+      {/* custom styles for task cards and the amber advisory box */}
       <style jsx>{`
         :global(.rg-task-card) {
           background: rgba(0, 0, 0, 0.25) !important;

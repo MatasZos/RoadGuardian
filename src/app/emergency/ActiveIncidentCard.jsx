@@ -2,11 +2,12 @@ import { Card, Row, Col, Badge, Button } from "react-bootstrap";
 import { STATUS_LABELS } from "./constants";
 import { prettify, formatTime } from "./utils";
 
-// Big red-bordered card the reporter sees while their own emergency is open.
+// ActiveIncidentCard component that shows the full details of the reporter's own open emergency with resolve and cancel actions
 export default function ActiveIncidentCard({ incident, onResolve, onCancel }) {
   return (
     <Card className="rg-active-incident border-0 shadow">
       <Card.Body className="p-4">
+        {/* header row — incident type on the left, severity badge on the right */}
         <div className="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
           <div>
             <h2 className="h4 fw-bold text-danger mb-1">
@@ -22,6 +23,7 @@ export default function ActiveIncidentCard({ incident, onResolve, onCancel }) {
           </Badge>
         </div>
 
+        {/* detail grid — key facts displayed as labelled cells */}
         <Row className="g-3 mb-3">
           <InfoCell label="Created" value={formatTime(incident.createdAt)} />
           <InfoCell label="Phone" value={incident.phone || "—"} />
@@ -50,6 +52,7 @@ export default function ActiveIncidentCard({ incident, onResolve, onCancel }) {
           </div>
         )}
 
+        {/* action buttons — resolve marks the incident done, cancel withdraws the request */}
         <div className="d-flex flex-wrap gap-2">
           <Button variant="success" onClick={onResolve}>
             <i className="bi bi-check-circle-fill me-2"></i>
@@ -65,6 +68,7 @@ export default function ActiveIncidentCard({ incident, onResolve, onCancel }) {
   );
 }
 
+// InfoCell component that renders a labelled value cell within the incident detail grid
 function InfoCell({ label, value, highlight }) {
   return (
     <Col xs={12} sm={6} md={4}>
