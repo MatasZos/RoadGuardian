@@ -122,14 +122,14 @@ export default function RegisterPage() {
             </InputGroup>
           </Form.Group>
 
-          // password and phone fields placed side by side on wider screens
+          {/* register form fields: name, email and password */}
           <Row className="g-3">
             <Col xs={12} md={6}>
               <Form.Group className="mb-3" controlId="registerPassword">
                 <Form.Label className="fw-semibold text-body-secondary small">
                   Password
                 </Form.Label>
-                // password field with a toggle to reveal the entered password
+                {/* password field with a toggle to reveal the entered password*/}
                 <InputGroup size="lg">
                   <Form.Control
                     type={showPassword ? "text" : "password"}
@@ -181,7 +181,7 @@ export default function RegisterPage() {
             </Col>
           </Row>
 
-          // register button shows a spinner while the account creation request is being processed
+          {/* form submission handler */}
           <Button
             type="submit"
             variant="primary"
@@ -202,7 +202,7 @@ export default function RegisterPage() {
           </Button>
         </Form>
 
-        // feedback alert shown below the button after the registration attempt, green for success or red for error
+        {/*feedback alert shown below the button after the registration attempt, green for success or red for error */}
         {message && (
           <Alert
             variant={isSuccess ? "success" : "danger"}
@@ -219,7 +219,7 @@ export default function RegisterPage() {
           </Alert>
         )}
 
-        // link to the login page for users who already have an existing account
+        {/*link to the login page for users who already have an existing account*/}
         <div className="text-center mt-4">
           <span className="text-body-secondary small">
             Already have an account?{" "}

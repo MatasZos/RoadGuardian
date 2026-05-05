@@ -205,7 +205,7 @@ export default function ProfilePage() {
           <Card.Body className="p-4">
             <Form onSubmit={handleSave}>
               <Stack gap={3}>
-                // error and success alerts shown above the form fields after a save attempt
+              {/*error and success alerts shown above the form fields after a save attempt*/}
                 {error && (
                   <Alert variant="danger" className="mb-0">
                     <i className="bi bi-exclamation-triangle-fill me-2"></i>
@@ -224,7 +224,7 @@ export default function ProfilePage() {
                   </Alert>
                 )}
 
-                // name field — shown as read-only text when not editing, or as an input when editing
+                {/*   name field — shown as read-only text when not editing, or as an input when editing*/}
                 <Form.Group controlId="profileName">
                   <Form.Label className="text-body-secondary small fw-semibold">
                     NAME
@@ -242,7 +242,7 @@ export default function ProfilePage() {
 
                 <hr className="border-secondary-subtle my-0" />
 
-                // email field is always read-only as it is tied to the user's account and cannot be changed here
+                {/*email field is always read-only as it is tied to the user's account and cannot be changed here*/}
                 <Form.Group>
                   <Form.Label className="text-body-secondary small fw-semibold">
                     EMAIL
@@ -254,7 +254,7 @@ export default function ProfilePage() {
 
                 <hr className="border-secondary-subtle my-0" />
 
-                // phone field — shown as read-only text when not editing, or as an input when editing
+                {/*phone field — shown as read-only text when not editing, or as an input when editing*/}
                 <Form.Group controlId="profilePhone">
                   <Form.Label className="text-body-secondary small fw-semibold">
                     PHONE
@@ -275,7 +275,7 @@ export default function ProfilePage() {
 
                 <hr className="border-secondary-subtle my-0" />
 
-                // password field — shown as masked dots when not editing, or as new/confirm inputs when editing
+                {/* password field — shown as masked dots when not editing, or as new/confirm inputs when editing*/}
                 <Form.Group>
                   <Form.Label className="text-body-secondary small fw-semibold">
                     PASSWORD
@@ -284,7 +284,7 @@ export default function ProfilePage() {
                     <div className="rg-readonly-value">••••••••••••</div>
                   ) : (
                     <Stack gap={2}>
-                      // new password input with a toggle to reveal the typed characters
+                      {/*new password input with a toggle to reveal the typed characters*/}
                       <InputGroup>
                         <Form.Control
                           type={showPassword ? "text" : "password"}
@@ -360,6 +360,8 @@ export default function ProfilePage() {
                             </>
                           ) : (
                             <>
+
+
                               <i className="bi bi-check-lg me-2"></i>
                               Save Changes
                             </>
@@ -377,7 +379,7 @@ export default function ProfilePage() {
                     )}
                   </Col>
                   <Col className="d-flex justify-content-sm-end">
-                    // sign out button always visible to allow the user to log out from any state
+                    {/*sign out button always visible to allow the user to log out from any state*/}
                     <Button
                       variant="outline-danger"
                       type="button"
@@ -395,7 +397,7 @@ export default function ProfilePage() {
         </Card>
       </Container>
 
-      // custom styles for the profile page, including the background gradient, card styles and form field overrides
+      {/*custom styles for the profile page, including the background gradient, card styles and form field overrides*/}
       <style>{`
         .rg-profile-page {
           background:
