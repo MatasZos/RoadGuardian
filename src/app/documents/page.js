@@ -200,7 +200,7 @@ export default function DocumentsPage() {
               </p>
             </div>
 
-            // document type dropdown — drives whether the expiry date field is shown below
+           {/* document type dropdown — drives whether the expiry date field is shown below*/}
             <select
               className={styles.input}
               value={form.title}
@@ -217,7 +217,7 @@ export default function DocumentsPage() {
               ))}
             </select>
 
-            // expiry date input — only rendered for document types that require an expiry date
+             {/*expiry date input — only rendered for document types that require an expiry date*/}
             {selectedType?.expires && (
               <input
                 className={styles.input}
@@ -230,7 +230,7 @@ export default function DocumentsPage() {
               />
             )}
 
-            // notes textarea — shows a custom placeholder for "Other" document types to prompt a description
+            {/*notes textarea — shows a custom placeholder for "Other" document types to prompt a description*/} 
             <textarea
               className={styles.textarea}
               placeholder={
@@ -247,7 +247,7 @@ export default function DocumentsPage() {
                 {editingId ? "Save Changes" : "Add Document"}
               </button>
 
-              // cancel button only appears when editing an existing document
+              {/*cancel button only appears when editing an existing document*/}
               {editingId && (
                 <button
                   type="button"
@@ -330,11 +330,11 @@ function Section({
           <h2 className={`${styles.sectionTitle} ${accentClass}`}>{title}</h2>
           {subtitle && <p className={styles.sectionSubtitle}>{subtitle}</p>}
         </div>
-        // badge showing the total count of documents in this section
+        {/*badge showing the total count of documents in this section*/}
         <div className={`${styles.badge} ${badgeClass}`}>{items.length}</div>
       </div>
 
-      // show a "None" placeholder when there are no documents in this category, otherwise list the document cards
+      {/*show a "None" placeholder when there are no documents in this category, otherwise list the document cards*/}
       {items.length === 0 ? (
         <p className={styles.emptyText}>None</p>
       ) : (
