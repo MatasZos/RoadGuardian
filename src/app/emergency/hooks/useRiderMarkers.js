@@ -18,7 +18,7 @@ export function useRiderMarkers({
   useEffect(() => {
     if (!mapRef.current) return;
 
-    // build a set of emails that already have an incident marker so we can skip them
+    // build a set of emails that already have an incident marker to skip them from being added
     const incidentEmails = new Set(activeIncidents.map((i) => i.userEmail));
     const seenIds = new Set();
 
