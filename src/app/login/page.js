@@ -160,7 +160,7 @@ export default function LoginPage() {
           </Alert>
         )}
 
-        // link to the register page for users who do not yet have an account
+        {/* link to the register page for users who do not yet have an account*/}
         <div className="text-center mt-4">
           <span className="text-body-secondary small">
             Don't have an account?{" "}

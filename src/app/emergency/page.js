@@ -236,7 +236,7 @@ export default function EmergencyPage() {
     fetchLiveRiders();
   }, [email]);
 
-  // ── Server actions ───────────────────────────────────────────────────────
+  //server actions
 
   // fetchIncidents loads all emergencies from the API and updates the incidents state
   async function fetchIncidents() {
@@ -394,7 +394,7 @@ export default function EmergencyPage() {
     setShowEmergencyForm((p) => !p);
   }
 
-  // ── Render ───────────────────────────────────────────────────────────────
+  // render
 
   // show a full-page spinner while the session is being resolved
   if (status === "loading") {
@@ -424,7 +424,7 @@ export default function EmergencyPage() {
             </div>
 
             <div className="d-flex flex-wrap gap-2">
-              // report emergency button — disabled while the user already has an active incident
+              {/*report emergency button — disabled while the user already has an active incident*/}
               <Button
                 variant="danger"
                 size="lg"
@@ -437,7 +437,7 @@ export default function EmergencyPage() {
               <Button variant="outline-light" onClick={clearRoute}>
                 <i className="bi bi-x-lg me-2"></i>Clear Route
               </Button>
-              // follow mode toggle — when on, the map camera stays centred on the user's position
+              {/* follow mode toggle — when on, the map camera stays centred on the user's position*/}
               <Button
                 variant={followMode ? "success" : "outline-secondary"}
                 onClick={() => setFollowMode((p) => !p)}
@@ -451,7 +451,7 @@ export default function EmergencyPage() {
           {/* live-location toggle and map colour legend */}
           <Card className="rg-control-bar border-0">
             <Card.Body className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 py-3">
-              // live location switch — must be on before a user can report or share their position with other riders
+               {/*live location switch — must be on before a user can report or share their position with other riders*/}
               <Form.Check
                 type="switch"
                 id="shareLiveLocation"
@@ -475,7 +475,7 @@ export default function EmergencyPage() {
             <div ref={mapContainerRef} className="rg-map" />
           </div>
 
-          // dismissible error alert shown when an API call or validation check fails
+          {/*dismissible error alert shown when an API call or validation check fails*/}
           {error && (
             <Alert variant="danger" dismissible onClose={() => setError("")} className="mb-0">
               <i className="bi bi-exclamation-triangle-fill me-2"></i>
@@ -483,7 +483,7 @@ export default function EmergencyPage() {
             </Alert>
           )}
 
-          // emergency report form — only shown when the user has toggled it and has no existing active incident
+          {/*emergency report form — only shown when the user has toggled it and has no existing active incidents*/} 
           {showEmergencyForm && !myActiveIncident && (
             <EmergencyForm
               form={form}
@@ -494,7 +494,7 @@ export default function EmergencyPage() {
             />
           )}
 
-          // active incident banner — shown when the user has an ongoing emergency so they can resolve or cancel it
+          {/* active incident banner — shown when the user has an ongoing emergency so they can resolve or cancel it*/}
           {myActiveIncident && (
             <ActiveIncidentCard
               incident={myActiveIncident}
@@ -535,7 +535,7 @@ export default function EmergencyPage() {
         onSendMessage={chat.handleSendMessage}
       />
 
-      // custom styles for the emergency page, including the background gradient, map dimensions, card styles and form field overrides
+      {/* custom styles for the emergency page, including the background gradient, map dimensions, card styles and form field overrides */}
       <style>{`
         .rg-emergency-page {
           background:

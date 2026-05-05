@@ -307,7 +307,7 @@ export default function MaintenancePage() {
         </Stack>
       </Container>
 
-      // custom styles for the maintenance page, including the background gradient, card styles and form field overrides
+      {/*custom styles for the maintenance page, including the background gradient, card styles and form field overrides*/} 
       <style>{`
         .rg-maintenance-page {
           background:
