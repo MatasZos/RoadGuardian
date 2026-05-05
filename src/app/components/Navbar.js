@@ -14,6 +14,7 @@ import {
 } from "react-bootstrap";
 import { getAblyClient } from "../../lib/ablyClient";
 
+// Navbar component that renders the top navigation bar with a hamburger menu, notification bell and profile icon
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
@@ -23,23 +24,27 @@ export default function Navbar() {
 
   const email = session?.user?.email || null;
 
+  // memoize the unread count so it only recalculates when notifications change
   const unreadCount = useMemo(
     () => notifications.filter((n) => !n.read).length,
     [notifications]
   );
 
+  // goTo navigates to a route and closes both the menu and notification panel
   function goTo(path) {
     router.push(path);
     setMenuOpen(false);
     setNotifOpen(false);
   }
 
+  // logout signs the user out of their session and redirects to the login page
   async function logout() {
     setMenuOpen(false);
     setNotifOpen(false);
     await signOut({ callbackUrl: "/login" });
   }
 
+  // getNotifIcon returns the Bootstrap icon class and colour for a given notification type
   function getNotifIcon(type) {
     if (type === "message") return "bi-chat-dots-fill text-primary";
     if (type === "document") return "bi-file-earmark-text-fill text-warning";
@@ -48,6 +53,7 @@ export default function Navbar() {
     return "bi-bell-fill text-secondary";
   }
 
+  // formatTime formats a notification's createdAt date into a short readable locale string
   function formatTime(dateValue) {
     if (!dateValue) return "";
     const d = new Date(dateValue);
@@ -60,6 +66,7 @@ export default function Navbar() {
     });
   }
 
+  // loadNotifications fetches all notifications for the current user from the API
   async function loadNotifications() {
     if (!email) return;
     try {
@@ -74,6 +81,7 @@ export default function Navbar() {
     }
   }
 
+  // markAllRead sets every notification to read in a single API call and updates local state optimistically
   async function markAllRead() {
     if (!email) return;
     try {
@@ -90,6 +98,7 @@ export default function Navbar() {
     }
   }
 
+  // clearNotifications permanently removes all notifications for the current user
   async function clearNotifications() {
     if (!email) return;
     try {
@@ -104,6 +113,7 @@ export default function Navbar() {
     }
   }
 
+  // markSingleRead marks one notification as read by its MongoDB id
   async function markSingleRead(id) {
     if (!email || !id) return;
     try {
@@ -122,6 +132,7 @@ export default function Navbar() {
     }
   }
 
+  // load notifications on mount and subscribe to the user's Ably channel for real-time updates
   useEffect(() => {
     if (!email) return;
 
@@ -149,6 +160,7 @@ export default function Navbar() {
 
   return (
     <>
+      {/* main navbar with hamburger, brand logo, notification bell and profile picture */}
       <BsNavbar
         bg="dark"
         variant="dark"
@@ -184,6 +196,7 @@ export default function Navbar() {
           </div>
 
           <div className="d-flex align-items-center gap-2">
+            {/* notification bell with unread count badge */}
             <Dropdown
               align="end"
               show={notifOpen}
@@ -210,6 +223,7 @@ export default function Navbar() {
                 )}
               </Dropdown.Toggle>
 
+              {/* notification dropdown panel with mark-all-read and clear actions */}
               <Dropdown.Menu
                 className="shadow-lg p-0 overflow-hidden"
                 style={{
@@ -239,6 +253,7 @@ export default function Navbar() {
                   </div>
                 </div>
 
+                {/* scrollable notification list — unread items have a tertiary background */}
                 <div style={{ maxHeight: "55vh", overflowY: "auto" }}>
                   {notifications.length === 0 ? (
                     <div className="text-center text-secondary py-4 px-3 small">
@@ -283,6 +298,7 @@ export default function Navbar() {
               </Dropdown.Menu>
             </Dropdown>
 
+            {/* profile picture — clicking navigates to the profile page */}
             <img
               src="/profile.png"
               alt="Profile"
@@ -295,6 +311,7 @@ export default function Navbar() {
         </Container>
       </BsNavbar>
 
+      {/* offcanvas side menu with links to all main sections and a sign-out button */}
       <Offcanvas
         show={menuOpen}
         onHide={() => setMenuOpen(false)}

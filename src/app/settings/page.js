@@ -112,17 +112,16 @@ export default function SettingsPage() {
                 Manage your preferences and reminders for RoadGuardian.
               </p>
             </div>
-            // AccountPill showing the signed-in user's email, or null if unauthenticated
+            {/* AccountPill showing the signed-in user's email, or null if unauthenticated */}
             <AccountPill email={unauthenticated ? null : session?.user?.email} />
           </div>
 
           <Card className="rg-section-card border-0">
             <Card.Body className="p-4">
+              {/* skeleton shown while settings load, login prompt for unauthenticated users, or the preferences form */}
               {loading ? (
-                // show a loading skeleton while settings are being fetched from the server
                 <LoadingSkeleton />
               ) : unauthenticated ? (
-                // if the user is not authenticated, prompt them to log in before viewing settings
                 <UnauthedPrompt
                   message="Please log in to view and update your settings."
                   onLogin={() => router.push("/login")}
@@ -137,7 +136,7 @@ export default function SettingsPage() {
                         Saved to your account and synced across devices.
                       </p>
                     </div>
-                    // save button shows a spinner while the settings are being written to the database
+                    {/* save button shows a spinner while the settings are being written to the database */}
                     <Button
                       variant="primary"
                       onClick={handleSave}
@@ -214,7 +213,7 @@ export default function SettingsPage() {
         </Container>
       </div>
 
-      //toast container for showing success or error feedback after saving settings
+      {/* toast container for showing success or error feedback after saving settings */}
       <ToastContainer position="bottom-end" className="p-3">
         <Toast
           show={!!toast}
@@ -236,7 +235,7 @@ export default function SettingsPage() {
         </Toast>
       </ToastContainer>
 
-      // custom styles for the settings page, including the background, card styles and toggle switch overrides
+      {/* custom styles for the settings page, including the background, card styles and toggle switch overrides */}
       <style>{`
         .rg-settings-page {
           background: radial-gradient(circle at top, #101a1f, #000);
@@ -269,7 +268,7 @@ export default function SettingsPage() {
   );
 }
 
-// a section component for grouping related settings together under a labelled heading
+// SettingsSection component that groups related settings under a labelled heading with an icon
 function SettingsSection({ title, icon, children, isLast }) {
   return (
     <section className={isLast ? "pt-3" : "pt-3 pb-2 border-bottom border-secondary-subtle mb-3"}>
@@ -282,7 +281,7 @@ function SettingsSection({ title, icon, children, isLast }) {
   );
 }
 
-//a single setting row component that shows the setting title, description and a toggle switch to enable or disable the setting
+// SettingRow component that renders a setting's title, description and a toggle switch to enable or disable it
 function SettingRow({ id, title, desc, enabled, onToggle }) {
   return (
     <div className="d-flex align-items-start justify-content-between gap-3">
@@ -301,7 +300,7 @@ function SettingRow({ id, title, desc, enabled, onToggle }) {
   );
 }
 
-//a simple loading skeleton component that shows a spinner while the settings are being loaded from the server
+// LoadingSkeleton component that shows a centred spinner while settings are being fetched from the server
 function LoadingSkeleton() {
   return (
     <div className="d-flex align-items-center justify-content-center py-4">

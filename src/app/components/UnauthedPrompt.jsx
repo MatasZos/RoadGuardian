@@ -2,11 +2,11 @@
 
 import { Button } from "react-bootstrap";
 
-// Shown on pages that require auth when the user isn't signed in. Caller
-// passes their own `message` because the wording differs page to page.
+// UnauthedPrompt component that renders a sign-in prompt with a customisable message and a login button, shown on pages that require authentication
 export default function UnauthedPrompt({ message, onLogin }) {
   return (
     <div className="d-flex gap-3 align-items-start">
+      {/* warning icon in a red-tinted circle */}
       <div
         className="d-flex align-items-center justify-content-center rounded-3 flex-shrink-0"
         style={{

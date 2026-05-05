@@ -95,7 +95,7 @@ export default function LoginPage() {
             <Form.Label className="fw-semibold text-body-secondary small">
               Password
             </Form.Label>
-            // password field with a toggle button to show or hide the entered password
+            {/* password field with a toggle button to show or hide the entered password */}
             <InputGroup size="lg">
               <Form.Control
                 type={showPassword ? "text" : "password"}
@@ -122,7 +122,7 @@ export default function LoginPage() {
             </InputGroup>
           </Form.Group>
 
-          // login button shows a spinner while the authentication request is in progress
+          {/* login button shows a spinner while the authentication request is in progress */}
           <Button
             type="submit"
             variant="primary"
@@ -143,7 +143,7 @@ export default function LoginPage() {
           </Button>
         </Form>
 
-        // feedback alert shown below the button after a login attempt, styled green for success or red for failure
+        {/* feedback alert shown below the button after a login attempt, styled green for success or red for failure */}
         {message && (
           <Alert
             variant={isSuccess ? "success" : "danger"}

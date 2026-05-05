@@ -2,9 +2,7 @@
 
 import { Badge } from "react-bootstrap";
 
-// Header badge with a status dot + "Signed in as ..." / "Signed out".
-// Uses .rg-account-pill, .rg-status-dot, .rg-status-on/.rg-status-off
-// (defined in globals.css).
+// AccountPill component that shows a green or grey status dot and the signed-in user's email, or "Signed out" if no email is provided
 export default function AccountPill({ email }) {
   const signedIn = Boolean(email);
   return (

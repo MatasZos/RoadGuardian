@@ -328,6 +328,7 @@ export default function ProfilePage() {
                 {/* action buttons — edit/save/cancel on the left, sign out on the right */}
                 <Row className="g-2">
                   <Col xs={12} sm="auto">
+                    {/* edit profile button or save/cancel buttons depending on editing state */}
                     {!isEditing ? (
                       <Button
                         variant="primary"
@@ -338,7 +339,6 @@ export default function ProfilePage() {
                         Edit Profile
                       </Button>
                     ) : (
-                      // save and cancel buttons shown when the form is in edit mode
                       <Stack
                         direction="horizontal"
                         gap={2}

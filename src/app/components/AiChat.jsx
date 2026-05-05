@@ -10,6 +10,7 @@ import {
   Stack,
 } from "react-bootstrap";
 
+// AiChat component that renders a chat panel connected to the /api/ai/chat endpoint, showing a threaded message list and a text input
 export default function AiChat() {
   const [messages, setMessages] = useState([
     {
@@ -21,12 +22,14 @@ export default function AiChat() {
   const [loading, setLoading] = useState(false);
   const scrollRef = useRef(null);
 
+  // scroll to the bottom of the message list whenever messages change or loading state updates
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [messages, loading]);
 
+  // send appends the user's message to the thread and fetches an AI reply from the /api/ai/chat endpoint
   async function send() {
     const text = input.trim();
     if (!text || loading) return;
@@ -71,6 +74,7 @@ export default function AiChat() {
     }
   }
 
+  // handleKeyDown submits the message when Enter is pressed without Shift held
   function handleKeyDown(e) {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -80,6 +84,7 @@ export default function AiChat() {
 
   return (
     <Card className="shadow-sm mt-3">
+      {/* card header with the assistant avatar, name and subtitle */}
       <Card.Header className="d-flex align-items-center gap-2 py-3">
         <div className="rg-ai-avatar">
           <i className="bi bi-robot"></i>
@@ -92,6 +97,7 @@ export default function AiChat() {
         </div>
       </Card.Header>
 
+      {/* scrollable message list — auto-scrolls to the latest message */}
       <Card.Body className="p-0">
         <div
           ref={scrollRef}
@@ -113,6 +119,7 @@ export default function AiChat() {
         </div>
       </Card.Body>
 
+      {/* message input and send button */}
       <Card.Footer className="p-3">
         <InputGroup>
           <Form.Control
@@ -142,6 +149,7 @@ export default function AiChat() {
         </InputGroup>
       </Card.Footer>
 
+      {/* custom styles for the AI avatar gradient */}
       <style>{`
         .rg-ai-avatar {
           width: 40px;
@@ -159,6 +167,7 @@ export default function AiChat() {
   );
 }
 
+// ChatBubble component that renders a single message bubble aligned right for user messages and left for assistant replies, with distinct error styling
 function ChatBubble({ message }) {
   const isUser = message.role === "user";
   const isError = message.isError;

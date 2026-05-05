@@ -362,7 +362,7 @@ function DocumentCard({ doc, cardClass, onEdit, onDelete }) {
     <div className={`${styles.card} ${cardClass}`}>
       <h3 className={styles.cardTitle}>{doc.title}</h3>
 
-      // show days remaining or days overdue if expiry date exists, otherwise indicate no expiry is required
+      {/* show days remaining or days overdue if expiry date exists, otherwise indicate no expiry is required */}
       {doc.expiryDate ? (
         <p className={styles.cardText}>
           <strong>Expires:</strong> {formatDisplayDate(doc.expiryDate)}
@@ -382,7 +382,7 @@ function DocumentCard({ doc, cardClass, onEdit, onDelete }) {
 
       {doc.notes && <p className={styles.cardNotes}>{doc.notes}</p>}
 
-      // edit and delete buttons for managing this document
+      {/* edit and delete buttons for managing this document */}
       <div className={styles.cardActions}>
         <button className={styles.editBtn} onClick={() => onEdit(doc)}>
           Edit

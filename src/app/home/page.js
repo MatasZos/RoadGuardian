@@ -85,7 +85,7 @@ export default function HomePage() {
                 className={`rg-action-card h-100 border-0 rg-action-${action.accent}`}
               >
                 <Card.Body className="d-flex flex-column gap-3 p-4">
-                  // icon with accent colour matching the feature category
+                  {/* icon with accent colour matching the feature category */}
                   <div className={`rg-action-icon bg-${action.accent}-subtle text-${action.accent}-emphasis`}>
                     <i className={`bi ${action.icon} fs-3`}></i>
                   </div>
@@ -111,7 +111,7 @@ export default function HomePage() {
         <AiChat />
       </Container>
 
-      // custom styles for the home page, including the welcome card gradient and action card hover effects
+      {/* custom styles for the home page, including the welcome card gradient and action card hover effects */}
       <style>{`
         .rg-home-page {
           background:
