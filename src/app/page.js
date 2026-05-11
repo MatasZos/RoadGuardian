@@ -148,7 +148,7 @@ export default function LandingPage() {
           </div>
         </Container>
       </section>
-      // custom styles for the landing page, including the hero section, feature icons and fade-in animation
+{/* custom styles for the landing page, including the hero section, feature icons and fade-in animation*/}
       <style>{`
         .rg-hero {
           background:
